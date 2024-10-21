@@ -7,18 +7,16 @@ jobs:
         steps:
             - checkout
             - run:
-                  name: 'Check is CI Required'
-                  command: |
-                      git log --format=oneline -n 1 $CIRCLE_SHA1 | tee commitmsg 
-                      GIT_COMMIT_DESC=$(awk '{print $3}' commitmsg)
-                      if ! [[ $GIT_COMMIT_DESC =~ ^(npmupdate|certify|internal)$ ]];
-                      then
-                          echo $GIT_COMMIT_DESC
-                          circleci-agent step halt
+                   name: 'Avoid CI build'
+                   command: |
+                      echo $CIRCLE_SHA1
+                      echo $CIRCLE_PROJECT_USERNAME
+                      git log --format=oneline -n 1 $CIRCLE_SHA1 | tee commitmsg
+                      if grep -q 'builds' commitmsg; then
+                          echo "publish" 
                       else
-                          echo $GIT_COMMIT_DESC
+                          circleci-agent step halt
                       fi
-
             - restore_cache:
                   key: yarn-packages-{{ checksum "yarn.lock" }}
             - run:
@@ -57,7 +55,7 @@ jobs:
                        git log --format=oneline -n 1 $CIRCLE_SHA1 | tee commitmsg 
                        GIT_COMMIT_DESC=$(awk '{print $3}' commitmsg)
                        export COMMIT_MSG=$(cat commitmsg)
-                       node apps/ZUtils/commitToCertified.js
+                       node ./ZUtils/commitToCertified.js
                        if ! [[ $GIT_COMMIT_DESC =~ ^(npmupdate)$ ]];
                        then
                           echo $GIT_COMMIT_DESC
@@ -65,18 +63,7 @@ jobs:
                         else
                           echo $GIT_COMMIT_DESC
                        fi 
-            - run:
-                  name: Trigger version bump
-                  command: | 
-                      node triggerUpdate.js
-                      rm commitmsg
-                      git remote rm origin
-                      git remote add origin https://nsdevaraj:$GIT_TOKEN@github.com/visualbis/xviz.git
-                      git config --global user.email "devarajns@lumel.com"
-                      git config --global user.name "Devaraj NS"
-                      git add .
-                      git commit -m "chore(ver): bump"
-                      git push origin main
+           
 workflows:
     version: 2
     build_and_test:

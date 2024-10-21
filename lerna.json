@@ -1,0 +1,36 @@
+{
+    "command": {
+        "publish": {
+            "conventionalCommits": true,
+            "createRelease": "npm",
+            "exact": true,
+            "ignoreChanges": [
+                "**/*.md",
+                "**/*.spec.*",
+                "**/*.test.*",
+                "**/*config*",
+                "**/__fixtures__/**",
+                "**/__tests__/**"
+            ],
+            "message": "chore(release): publish",
+            "yes": true
+        },
+        "version": {
+            "conventionalCommits": true,
+            "createRelease": "github",
+            "exact": true,
+            "ignoreChanges": [
+                "**/*.md",
+                "**/*.spec.*",
+                "**/*.test.*",
+                "**/*config*",
+                "**/__fixtures__/**",
+                "**/__tests__/**"
+            ],
+            "message": "chore(ver): npmupdate",
+            "yes": true
+        }
+    },
+    "version": "0.0.1-alpha.72",
+    "npmClient": "yarn"
+}
