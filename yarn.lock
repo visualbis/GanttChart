@@ -1329,6 +1329,13 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
+abort-controller@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/abort-controller/-/abort-controller-3.0.0.tgz#eaf54d53b62bae4138e809ca225c8439a6efb392"
+  integrity sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==
+  dependencies:
+    event-target-shim "^5.0.0"
+
 accepts@~1.3.4, accepts@~1.3.5, accepts@~1.3.8:
   version "1.3.8"
   resolved "https://registry.yarnpkg.com/accepts/-/accepts-1.3.8.tgz#0bf0be125b67014adcb0b0921e62db7bffe16b2e"
@@ -1774,7 +1781,7 @@ chalk@^2.3.0, chalk@^2.4.2:
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
 
-chalk@^4.0.0, chalk@^4.1.0, chalk@^4.1.1:
+chalk@^4.0.0, chalk@^4.1.0, chalk@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-4.1.2.tgz#aac4e2b7734a740867aeb16bf02aad556a1e7a01"
   integrity sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==
@@ -2102,7 +2109,7 @@ crypto-browserify@^3.12.0:
     randombytes "^2.0.0"
     randomfill "^1.0.3"
 
-css-loader@^6.7.3:
+css-loader@^6.8.1:
   version "6.11.0"
   resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-6.11.0.tgz#33bae3bf6363d0a7c2cf9031c96c744ff54d85ba"
   integrity sha512-CTJ+AEQJjq5NzLga5pE39qdiSV56F8ywCIsqNIRF0r7BDgWsN25aazToqAFg7ZrtA/U016xudB3ffgweORxX7g==
@@ -2733,6 +2740,11 @@ etag@~1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==
+
+event-target-shim@^5.0.0:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/event-target-shim/-/event-target-shim-5.0.1.tgz#5d4d3ebdf9583d63a5333ce2deb7480ab2b05789"
+  integrity sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==
 
 eventemitter3@^4.0.0:
   version "4.0.7"
@@ -3814,7 +3826,7 @@ launch-editor@^2.6.0:
     picocolors "^1.0.0"
     shell-quote "^1.8.1"
 
-less-loader@^11.1.0:
+less-loader@^11.1.3:
   version "11.1.4"
   resolved "https://registry.yarnpkg.com/less-loader/-/less-loader-11.1.4.tgz#e8a070844efaefbe59b978acaf57b9d3e868cf08"
   integrity sha512-6/GrYaB6QcW6Vj+/9ZPgKKs6G10YZai/l/eJ4SLwbzqNTBsAqt5hSLVF47TgsiBxV1P6eAU0GYRH3YRuQU9V3A==
@@ -4088,7 +4100,7 @@ mimic-fn@^2.1.0:
   resolved "https://registry.yarnpkg.com/mimic-fn/-/mimic-fn-2.1.0.tgz#7ed2c2ccccaf84d3ffcb7a69b57711fc2083401b"
   integrity sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==
 
-mini-css-extract-plugin@^2.7.5:
+mini-css-extract-plugin@^2.7.6:
   version "2.9.1"
   resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-2.9.1.tgz#4d184f12ce90582e983ccef0f6f9db637b4be758"
   integrity sha512-+Vyi+GCCOHnrJ2VPS+6aPoXN2k2jgUzDRhTFLjjTBn23qyXJXkjUWQgTL+mXpF5/A8ixLdCc6kWsoeOjKGejKQ==
@@ -4537,10 +4549,10 @@ powerbi-visuals-api@5.4.0:
   dependencies:
     semver "^7.3.5"
 
-powerbi-visuals-tools@4.3.1:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/powerbi-visuals-tools/-/powerbi-visuals-tools-4.3.1.tgz#911f5fa5bc7cbd03bc9b78745cd8b292a05031a9"
-  integrity sha512-HJrcB3d+sglu5vabxGWcxl5iFH8F5AvxmZ0JE9NVADsbswaQizmckBpytcZaRL4ZFkU1BDiIOcP59koKrmWNiA==
+powerbi-visuals-tools@4.3.3:
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/powerbi-visuals-tools/-/powerbi-visuals-tools-4.3.3.tgz#156b077eab3a9fff00bc8b2480e11b860220a974"
+  integrity sha512-DZ0Woz4UDtozaexYtVTZKv1fCVD49Q5uV/FJQm4giMHZLyUvAXLQxBtLmcOPU6mmPHObiN2CNmJkzgZ4Cs36Iw==
   dependencies:
     assert "^2.0.0"
     async "^3.2.4"
@@ -4552,7 +4564,7 @@ powerbi-visuals-tools@4.3.1:
     console-browserify "^1.2.0"
     constants-browserify "^1.0.0"
     crypto-browserify "^3.12.0"
-    css-loader "^6.7.3"
+    css-loader "^6.8.1"
     domain-browser "^4.22.0"
     events "^3.3.0"
     extra-watch-webpack-plugin "^1.0.3"
@@ -4561,32 +4573,32 @@ powerbi-visuals-tools@4.3.1:
     json-loader "0.5.7"
     jszip "^3.10.1"
     less "^4.1.3"
-    less-loader "^11.1.0"
+    less-loader "^11.1.3"
     lodash.clonedeep "4.5.0"
     lodash.defaults "4.2.0"
     lodash.isequal "4.5.0"
-    mini-css-extract-plugin "^2.7.5"
+    mini-css-extract-plugin "^2.7.6"
     os-browserify "^0.3.0"
     path-browserify "^1.0.1"
-    powerbi-visuals-webpack-plugin "^3.2.0"
+    powerbi-visuals-webpack-plugin "^4.0.1"
     process "^0.11.10"
     punycode "^2.3.0"
     querystring-es3 "^0.2.1"
-    readable-stream "^3.6.2"
+    readable-stream "^4.4.2"
     stream-browserify "^3.0.0"
     stream-http "^3.2.0"
     string_decoder "^1.3.0"
     timers-browserify "^2.0.12"
-    ts-loader "^9.4.2"
+    ts-loader "^9.4.4"
     tty-browserify "0.0.1"
     typescript "^4.9.5"
-    url "^0.11.0"
+    url "^0.11.1"
     util "^0.12.5"
     uuid "9.0.0"
     vm-browserify "^1.1.2"
-    webpack "^5.78.0"
-    webpack-bundle-analyzer "4.8.0"
-    webpack-dev-server "^4.13.2"
+    webpack "^5.88.1"
+    webpack-bundle-analyzer "4.9.0"
+    webpack-dev-server "^4.15.1"
   optionalDependencies:
     fsevents "*"
 
@@ -4657,13 +4669,13 @@ powerbi-visuals-utils-typeutils@^6.0.1, powerbi-visuals-utils-typeutils@^6.0.3:
   optionalDependencies:
     fsevents "*"
 
-powerbi-visuals-webpack-plugin@^3.2.0:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/powerbi-visuals-webpack-plugin/-/powerbi-visuals-webpack-plugin-3.2.1.tgz#636d9129e53baef9a71ae7cc13fa6164835cfc35"
-  integrity sha512-Mb0j3EzInvNcVlYf8EzgmzKl8XMSEvOA+3MQuSYA4/CFtILilqUz5PFXNBqgcyEC0gJ5nZouhXWXujsLvsep6g==
+powerbi-visuals-webpack-plugin@^4.0.1:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/powerbi-visuals-webpack-plugin/-/powerbi-visuals-webpack-plugin-4.1.0.tgz#c90ef3f2d733092b7296ccf5595d2397b945881e"
+  integrity sha512-ttXVVsQYcs6VuoMNZ4SRaK9vdRaIZsU1S16sDSgcnnf5dlaXXiB/j411HACdYLMrU0YUR/vI4QTC7xq52hbMgw==
   dependencies:
     ajv "6.12.3"
-    chalk "^4.1.1"
+    chalk "^4.1.2"
     compare-versions "^3.6.0"
     fs-extra "9.0.1"
     jszip "^3.10.1"
@@ -5136,7 +5148,7 @@ readable-stream@^2.0.1, readable-stream@^2.3.8, readable-stream@~2.3.6:
     string_decoder "~1.1.1"
     util-deprecate "~1.0.1"
 
-readable-stream@^3.0.6, readable-stream@^3.1.1, readable-stream@^3.5.0, readable-stream@^3.6.0, readable-stream@^3.6.2:
+readable-stream@^3.0.6, readable-stream@^3.1.1, readable-stream@^3.5.0, readable-stream@^3.6.0:
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.6.2.tgz#56a9b36ea965c00c5a93ef31eb111a0f11056967"
   integrity sha512-9u/sniCrY3D5WdsERHzHE4G2YCXqoG5FTHUiCC4SIbr6XcLZBY05ya9EKjYek9O5xOAwjGq+1JdGBAS7Q9ScoA==
@@ -5144,6 +5156,17 @@ readable-stream@^3.0.6, readable-stream@^3.1.1, readable-stream@^3.5.0, readable
     inherits "^2.0.3"
     string_decoder "^1.1.1"
     util-deprecate "^1.0.1"
+
+readable-stream@^4.4.2:
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-4.5.2.tgz#9e7fc4c45099baeed934bff6eb97ba6cf2729e09"
+  integrity sha512-yjavECdqeZ3GLXNgRXgeQEdz9fvDDkNKyHnbHRFtOr7/LcfgBcmct7t/ET+HaCTqfh06OzoAxrkN/IfjJBVe+g==
+  dependencies:
+    abort-controller "^3.0.0"
+    buffer "^6.0.3"
+    events "^3.3.0"
+    process "^0.11.10"
+    string_decoder "^1.3.0"
 
 readdirp@~3.6.0:
   version "3.6.0"
@@ -5799,7 +5822,7 @@ ts-loader@8.0.5:
     micromatch "^4.0.0"
     semver "^6.0.0"
 
-ts-loader@^9.4.2:
+ts-loader@^9.4.4:
   version "9.5.1"
   resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-9.5.1.tgz#63d5912a86312f1fbe32cef0859fb8b2193d9b89"
   integrity sha512-rNH3sK9kGZcH9dYzC7CewQm4NtxJTjSEVRJ2DyBZR7f8/wcta+iV44UPCXc5+nzDzivKtlzV6c9P4e+oFhDLYg==
@@ -5967,7 +5990,7 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-url@^0.11.0:
+url@^0.11.1:
   version "0.11.4"
   resolved "https://registry.yarnpkg.com/url/-/url-0.11.4.tgz#adca77b3562d56b72746e76b330b7f27b6721f3c"
   integrity sha512-oCwdVC7mTuWiPyjLUz/COz5TLk6wgp0RCsN+wHZ2Ekneac9w8uuV0njcbbie2ME+Vs+d6duwmYuR3HgQXs1fOg==
@@ -6053,10 +6076,10 @@ webidl-conversions@^3.0.0:
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
   integrity sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==
 
-webpack-bundle-analyzer@4.8.0:
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/webpack-bundle-analyzer/-/webpack-bundle-analyzer-4.8.0.tgz#951b8aaf491f665d2ae325d8b84da229157b1d04"
-  integrity sha512-ZzoSBePshOKhr+hd8u6oCkZVwpVaXgpw23ScGLFpR6SjYI7+7iIWYarjN6OEYOfRt8o7ZyZZQk0DuMizJ+LEIg==
+webpack-bundle-analyzer@4.9.0:
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/webpack-bundle-analyzer/-/webpack-bundle-analyzer-4.9.0.tgz#fc093c4ab174fd3dcbd1c30b763f56d10141209d"
+  integrity sha512-+bXGmO1LyiNx0i9enBu3H8mv42sj/BJWhZNFwjz92tVnBa9J3JMGo2an2IXlEleoDOPn/Hofl5hr/xCpObUDtw==
   dependencies:
     "@discoveryjs/json-ext" "0.5.7"
     acorn "^8.0.4"
@@ -6080,7 +6103,7 @@ webpack-dev-middleware@^5.3.4:
     range-parser "^1.2.1"
     schema-utils "^4.0.0"
 
-webpack-dev-server@^4.13.2:
+webpack-dev-server@^4.15.1:
   version "4.15.2"
   resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-4.15.2.tgz#9e0c70a42a012560860adb186986da1248333173"
   integrity sha512-0XavAZbNJ5sDrCbkpWL8mia0o5WPOd2YGtxrEiZkBK9FjLppIUK2TgxK6qGD2P3hUXTJNNPVibrerKcx5WkR1g==
@@ -6128,7 +6151,7 @@ webpack-sources@^3.2.3:
   resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.2.3.tgz#2d4daab8451fd4b240cc27055ff6a0c2ccea0cde"
   integrity sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==
 
-webpack@^5.78.0:
+webpack@^5.88.1:
   version "5.95.0"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.95.0.tgz#8fd8c454fa60dad186fbe36c400a55848307b4c0"
   integrity sha512-2t3XstrKULz41MNMBF+cJ97TyHdyQ8HCt//pqErqDvNjU9YQBnZxIHa11VXsi7F3mb5/aO2tuDxdeTPdU7xu9Q==
