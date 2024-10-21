@@ -1,0 +1,70 @@
+{
+  "fontName": "fabric-icons",
+  "fontFamilyName": "FabricMDL2Icons",
+  "excludeGlyphs": false,
+  "excludeThirdPartyIcons": false,
+  "chunkSubsets": false,
+  "hashFontFileName": true,
+  "glyphs": [
+    {
+      "name": "ArchiveUndo",
+      "unicode": "E3A1"
+    },
+    {
+      "name": "CalculatorAddition",
+      "unicode": "E948"
+    },
+    {
+      "name": "ChromeMinimize",
+      "unicode": "E921"
+    },
+    {
+      "name": "CollapseAll",
+      "unicode": "F85A"
+    },
+    {
+      "name": "CollapseContentSingle",
+      "unicode": "F166"
+    },
+    {
+      "name": "DOM",
+      "unicode": "EC8D"
+    },
+    {
+      "name": "ExpandAll",
+      "unicode": "F859"
+    },
+    {
+      "name": "ExploreContentSingle",
+      "unicode": "F164"
+    },
+    {
+      "name": "Flag",
+      "unicode": "E7C1"
+    },
+    {
+      "name": "LocationDot",
+      "unicode": "E827"
+    },
+    {
+      "name": "PictureCenter",
+      "unicode": "F522"
+    },
+    {
+      "name": "PublishContent",
+      "unicode": "F0D4"
+    },
+    {
+      "name": "Sync",
+      "unicode": "E895"
+    },
+    {
+      "name": "ZoomIn",
+      "unicode": "E8A3"
+    },
+    {
+      "name": "ZoomOut",
+      "unicode": "E71F"
+    }
+  ]
+}

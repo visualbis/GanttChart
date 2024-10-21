@@ -1,0 +1,200 @@
+@import (less) "@visualbi/bifrost-powerbi/dist/style.css";
+@import (css) "./fabric-icons-inline.css";
+@import '@ag-grid-community/styles/ag-grid.css';
+@import '@ag-grid-community/styles/ag-theme-balham.css';
+
+.right-bottom-ps {
+  bottom: 18px;
+}
+
+.gantt-controls {
+  position: absolute;
+  top: 0;
+  width: calc(100% - 100px);
+  height: 20px;
+  font-size: 12px;
+  line-height: normal;
+}
+
+.gantt-controls .left-controls {
+  float: left;
+}
+
+.gantt-controls .right-controls {
+  float: right;
+}
+
+input.expand-collapse-btn {
+  margin-left: 30px;
+  height: 30px;
+}
+
+.bottomLegend {
+  height: 25px;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}
+
+#plusInputButton {
+  border-spacing: 1px;
+  border: none;
+  border-color: inherit;
+  margin: 2px;
+  border-radius: 2px;
+}
+
+#minusInputButton {
+  border-spacing: 1px;
+  border: none;
+  border-color: inherit;
+  border-radius: 2px;
+}
+
+#selectIndicator{
+  font-family: FabricMDL2Icons;
+  margin-right: 12px;
+  color: #0078d4;
+  font-weight: 600;
+}
+
+.buttonIndicator {
+  margin-right: 13px;
+  font-family: FabricMDL2Icons;
+  border: none;
+  background: none;
+  font-weight: 900 !important;
+  font-size: 14px;
+  cursor: pointer;
+  &:hover {
+    color: #0078d4 !important;
+  }
+}
+
+.hideElement {
+  display: none;
+}
+
+.tooltip-data-container div.tooltip-discoverabilityText {
+  display: none;
+}
+
+.vbi-display-data-icon {
+  z-index: 100;
+}
+
+.zoomButtonDiv {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  z-index: 10;
+  top: 5.5em;
+  right: 0.2em;
+  height: 5em;
+  justify-content: space-evenly;
+}
+
+#plusInputButtonNew,
+#minusInputButtonNew {
+  opacity: 0.4;
+  border: 1px;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+}
+
+#plusInputButtonNew:hover,
+#minusInputButtonNew:hover {
+  opacity: 1;
+}
+
+#pngIcon {
+  font-size: 22px;
+  border: none;
+  top: -4px;
+  position: absolute;
+  right: 32px;
+}
+
+.anychart-tooltip-separator {
+  display: none;
+}
+
+//PBX-8132
+#top-nav-bar {
+  width: unset;
+  right: 20px;
+}
+
+.nav-item {
+  padding-bottom: 6px !important;
+}
+
+.info-popup-container {
+  border-radius: 5px;
+  font-size: 12px;
+  border-radius: 5px;
+  bottom: -16px;
+  top: unset !important;
+  height: 40px;
+  transform: translate(-50%, -50%);
+  width: max-content;
+  padding: 10px !important;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: #ffffff;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 2px 4px;
+  .info-popup {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .icon--Info {
+    font-size: 15px;
+  }
+  .icon--ChromeClose {
+    font-size: 10px;
+    cursor: pointer;
+  }
+  .body {
+    padding: 0px 5px;
+  }
+}
+
+.icon--PublishContent:before {
+  content: "\F0D4";
+}
+.icon--ExpandAll:before {
+   content: "\F859";
+   margin-right: 10px;
+   vertical-align: middle;
+}
+.icon--ArchiveUndo:before {
+   content: "\E3A1";
+   margin-right: 10px;
+   vertical-align: middle;
+}
+.icon--DOM:before {
+  content: "\EC8D";
+  vertical-align: middle;
+}
+.icon--CollapseAll:before {
+   content: "\F85A";
+   margin-right: 10px;
+   vertical-align: middle;
+}
+
+.ag-center-cols-viewport::-webkit-scrollbar {
+  height: 0px;
+}
+
+.icon--ErrorBadge::before {
+  content: "\EA39";
+  color: #ff0000;
+  vertical-align: middle;
+}
+
+.anychart-credits {
+  z-index: 999;
+}
