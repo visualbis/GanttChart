@@ -602,10 +602,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/jasmine-jquery@1.5.34":
-  version "1.5.34"
-  resolved "https://registry.yarnpkg.com/@types/jasmine-jquery/-/jasmine-jquery-1.5.34.tgz#b80162eb4d1031067957006094c72656ec2ca1b0"
-  integrity sha512-PQpKqgzQa3nAtJb/zlBpWjagMtQK7xiAy6DsOhSla5lDAeBCvqyHfzBeTJ7YPDto0fernTSycPif8msdWH3Nlg==
+"@types/jasmine-jquery@1.5.37":
+  version "1.5.37"
+  resolved "https://registry.yarnpkg.com/@types/jasmine-jquery/-/jasmine-jquery-1.5.37.tgz#89c816898b021b2372b0d0be62ae16637074775d"
+  integrity sha512-8SMS6sDRxtIAyVdrgfJTm5DqURR0eQf3jHi4whIuhTAlllVeFixrCYlkW4LxNhC/CY5QfQb94qHVBXBE1VGocA==
   dependencies:
     "@types/jasmine" "*"
     "@types/jquery" "*"
@@ -3738,10 +3738,10 @@ karma-coverage@2.0.3:
     istanbul-reports "^3.0.0"
     minimatch "^3.0.4"
 
-karma-jasmine@4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/karma-jasmine/-/karma-jasmine-4.0.1.tgz#b99e073b6d99a5196fc4bffc121b89313b0abd82"
-  integrity sha512-h8XDAhTiZjJKzfkoO1laMH+zfNlra+dEQHUAjpn5JV1zCPtOIVWGQjLBrqhnzQa/hrU2XrZwSyBa6XjEBzfXzw==
+karma-jasmine@4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/karma-jasmine/-/karma-jasmine-4.0.2.tgz#386db2a3e1acc0af5265c711f673f78f1e4938de"
+  integrity sha512-ggi84RMNQffSDmWSyyt4zxzh2CQGwsxvYYsprgyR1j8ikzIduEdOlcLvXjZGwXG/0j41KUXOWsUCBfbEHPWP9g==
   dependencies:
     jasmine-core "^3.6.0"
 
