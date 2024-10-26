@@ -93,7 +93,7 @@ function copyCodeFoldersAndFiles() {
 
 function createNPMRC() {
     const readme = `//registry.npmjs.org/:_authToken=${
-        process.env.NPM_TOKEN || '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'
+        process.env.NPM_TOKEN || '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'
     }
 legacy-peer-deps=true`;
     fs.writeFileSync(path.join(BUILD_REPO_PATH, './.npmrc'), readme);
