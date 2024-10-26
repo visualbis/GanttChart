@@ -70,7 +70,6 @@
     "build:packages": "yarn nx run-many --target=build --projects=@visualbi/bifrost-editor,@visualbi/powerbi-common,@visualbi/bifrost-powerbi,@visualbi/bifrost-editor-rx,@visualbi/powerbi-editor",
     "build:mock-license": "lerna run build:mock-license-version --scope=@visualbi/bifrost-powerbi",
     "run:packages": "yarn nx run-many --target=dev --projects=@visualbi/powerbi-common,@visualbi/bifrost-powerbi",
-    "run:multiple-access-chart": "lerna run dev --scope multiple-axes-chart --scope @visualbi/bifrost-editor --scope @visualbi/powerbi-common --scope @visualbi/bifrost-powerbi --scope @visualbi/bifrost-editor-rx --parallel",
     "prepare": "husky install",
     "clean": "lerna run clean --parallel",
     "version": "lerna version prerelease --no-push --no-changelog --force-publish=\"*\"",
@@ -78,6 +77,6 @@
     "version-minor": "lerna version minor --no-push --no-changelog --force-publish=\"*\"",
     "publish-canary": "lerna publish from-package --canary --force-publish\"*\" --no-changelog --no-verify-access",
     "publish-packages": "lerna publish from-package --force-publish=\"*\" --no-git-tag-version --no-changelog --no-verify-access",
-    "postinstall": "husky install",
+    "postinstall": "husky install"
   }
 }
