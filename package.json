@@ -33,7 +33,7 @@
     "jquery": "3.5.1",
     "karma": "^6.3.4",
     "karma-chrome-launcher": "3.1.0",
-    "karma-coverage": "2.0.3",
+    "karma-coverage": "2.2.1",
     "karma-jasmine": "4.0.2",
     "karma-remap-istanbul": "^0.0.2",
     "karma-sourcemap-loader": "0.3.8",
