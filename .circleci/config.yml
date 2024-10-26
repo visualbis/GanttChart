@@ -33,14 +33,22 @@ jobs:
                   command: |
                       echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
             - run:
-                  name: Clean files
+                  name: PowerBI Build based on commit message
                   command: |
-                      yarn clean
+                      echo $CIRCLE_SHA1
+                      echo $CIRCLE_PROJECT_USERNAME
+                      git log --format=oneline -n 1 $CIRCLE_SHA1 | tee commitmsg
+                      yarn run package
+                  no_output_timeout: 30m
+            - store_artifacts:
+                  path: ./dist
+                  destination: dist/
             - run:
-                  name: Build files
+                  name: Setup Git and Yarn
                   command: |
-                      yarn build:packages
-
+                      yarn config set npmRegistryServer "https://registry.npmjs.org/"
+                      git config --global user.email "nsdevaraj@gmail.com"
+                      git config --global user.name "NS Devaraj"
             - run:
                   name: Publish build
                   command: |
@@ -48,21 +56,14 @@ jobs:
                       git config --global user.name "Devaraj NS"
                       git checkout .
                       yarn publish-packages 
-
             - run:
                   name: Publish to certified
-                  command: | 
-                       git log --format=oneline -n 1 $CIRCLE_SHA1 | tee commitmsg 
-                       GIT_COMMIT_DESC=$(awk '{print $3}' commitmsg)
-                       export COMMIT_MSG=$(cat commitmsg)
-                       node ./ZUtils/commitToCertified.js
-                       if ! [[ $GIT_COMMIT_DESC =~ ^(npmupdate)$ ]];
-                       then
-                          echo $GIT_COMMIT_DESC
-                          circleci-agent step halt
-                        else
-                          echo $GIT_COMMIT_DESC
-                       fi 
+                  command: |
+                      git log --format=oneline -n 1 $CIRCLE_SHA1 | tee commitmsg
+                      echo '$commitmsg'
+                      export BUILD_TYPE="production"
+                      echo "running commit to certify script"
+                      node ./zutils/commitToCertified.js
            
 workflows:
     version: 2

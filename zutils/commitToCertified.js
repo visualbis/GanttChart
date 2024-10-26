@@ -2,7 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const simpleGit = require('simple-git');
 let git = null;
-const CERTIFICATION_TARGET_BRANCH = 'C2';
+const CERTIFICATION_TARGET_BRANCH = 'C3';
 const REPO_URL = `https://${process.env.GIT_TOKEN}@github.com/devpowerpro/GanttChart.git`;
 const BUILD_REPO_PATH = path.join(__dirname, './GanttChart');
 const PACKAGE_ROOT = path.join(__dirname, './');
@@ -93,7 +93,7 @@ function copyCodeFoldersAndFiles() {
 
 function createNPMRC() {
     const readme = `//registry.npmjs.org/:_authToken=${
-        process.env.NPM_TOKEN || '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'
+        process.env.NPM_TOKEN || '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'
     }
 legacy-peer-deps=true`;
     fs.writeFileSync(path.join(BUILD_REPO_PATH, './.npmrc'), readme);
