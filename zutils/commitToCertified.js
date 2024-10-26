@@ -176,7 +176,7 @@ const merge = require('lodash.merge');
 const moment = require('moment');
 
 async function initVisualCodeCommit(componentName = '', buildType = '') {
-    const CERTIFICATION_TARGET_BRANCH = 'C2';
+    const CERTIFICATION_TARGET_BRANCH = 'C3';
     const BUILD_REPOS_ROOT = path.join(__dirname, './TEMP');
     const DEFAULT_FILES_PATH = path.join(__dirname, './defaultFiles');
     const ROOT_PATH = path.resolve(__dirname, '../');
