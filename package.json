@@ -25,6 +25,7 @@
     "@types/jasmine-jquery": "1.5.37",
     "@types/jquery": "3.5.3",
     "@types/lodash": "4.14.169",
+    "husky": "^7.0.4",
     "glob-parent": "^6.0.0",
     "jasmine": "3.6.2",
     "jasmine-core": "3.6.0",
