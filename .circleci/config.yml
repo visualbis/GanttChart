@@ -1,24 +1,57 @@
-version: 2
-
-jobs:
-    build_publish:
+version: 2.1
+defaults: &defaults
+    executor: node18
+parameters:
+    buildType:
+        type: string
+        default: ''
+    emailTo:
+        type: string
+        default: ''
+    mockLicence:
+        type: string
+        default: ''
+executors:
+    node18:
         docker:
-            - image: circleci/node:14-browsers
+            - image: cimg/node:18.17.0
+        environment:
+            NODE_OPTIONS: --max_old_space_size=8192
+        shell: bash
+        resource_class: large
+commands:
+    npmbuild:
+        description: 'NPM install any visual editor based on path'
+        parameters:
+            license:
+                type: boolean
+                default: false
+            qaguid:
+                type: boolean
+                default: true
+            onlinelicense:
+                type: boolean
+                default: true
         steps:
-            - checkout
             - run:
-                   name: 'Avoid CI build'
-                   command: |
+                  ## echo 'export buildNumber=$(date +"%y%m%d%H%M")' >> $BASH_ENV
+                  name: 'Avoid CI build'
+                  command: |
                       echo $CIRCLE_SHA1
                       echo $CIRCLE_PROJECT_USERNAME
                       git log --format=oneline -n 1 $CIRCLE_SHA1 | tee commitmsg
-                      if grep -q 'builds' commitmsg; then
+                      if ! [[ -z "<< pipeline.parameters.buildType >>" ]]
+                      then
+                          echo "Build Via API Trigger"
+                          echo "<< pipeline.parameters.buildType >>"            
+                      elif grep -q builds commitmsg; then
                           echo "publish" 
                       else
                           circleci-agent step halt
                       fi
             - restore_cache:
-                  key: yarn-packages-{{ checksum "yarn.lock" }}
+                  key: dependency-cache-{{ checksum "package.json" }}
+
             - run:
                   name: install-packages
                   command: |
@@ -29,42 +62,109 @@ jobs:
                       - .yarn/cache
                       - .yarn/unplugged
             - run:
-                  name: Authenticate npm
+                  name: 'Authenticate npm'
                   command: |
-                      echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+                    echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
             - run:
                   name: PowerBI Build based on commit message
                   command: |
                       echo $CIRCLE_SHA1
                       echo $CIRCLE_PROJECT_USERNAME
                       git log --format=oneline -n 1 $CIRCLE_SHA1 | tee commitmsg
-                      yarn run package
+                      if grep -q 'private' commitmsg; then
+                          yarn run privatebuild:powerbi
+                      else
+                          yarn run package
+                      fi
                   no_output_timeout: 30m
-            - store_artifacts:
-                  path: ./dist
-                  destination: dist/
             - run:
                   name: Setup Git and Yarn
                   command: |
-                      yarn config set npmRegistryServer "https://registry.npmjs.org/"
+                      yarn config set registry "https://registry.npmjs.org/"
                       git config --global user.email "nsdevaraj@gmail.com"
                       git config --global user.name "NS Devaraj"
-            - run:
-                  name: Publish build
-                  command: |
-                      git config --global user.email "nsdevaraj@gmail.com"
-                      git config --global user.name "Devaraj NS"
-                      git checkout .
-                      yarn publish-packages 
             - run:
                   name: Publish to certified
                   command: |
                       git log --format=oneline -n 1 $CIRCLE_SHA1 | tee commitmsg
                       echo '$commitmsg'
-                      export BUILD_TYPE="production"
+                      if grep -q private commitmsg; then
+                         export BUILD_TYPE="private"
+                      else
+                         export BUILD_TYPE="production"
+                      fi
+
                       echo "running commit to certify script"
-                      node ./zutils/commitToCertified.js
-           
+                      node ./packages/powerbi/zutils/commitToCertified.js
+            - run:
+                  name: 'Add License manager'
+                  command: echo "license option" && <<# parameters.license >>sed -i.bak 's/\/\/ this.appSourceLicenseManager.init/this.appSourceLicenseManager.init/g' packages/powerbi/src/visual.ts && rm packages/powerbi/src/visual.ts.bak && <</ parameters.license >>  true
+
+            - run:
+                  name: 'Add QA GUID'
+                  command: echo "qa guid option" && <<# parameters.qaguid >>node ./packages/powerbi/zutils/qaBuild.js && <</ parameters.qaguid >>  true
+
+            - run:
+                  name: 'Build Visual'
+                  command: |
+                      git log --format=oneline -n 1 $CIRCLE_SHA1 | tee commitmsg 
+                      export COMMIT_MSG=$(cat commitmsg)
+                      export BUILD_TYPE="<< pipeline.parameters.buildType >>"
+                      export EMAIL_MOCK_TO="<< pipeline.parameters.emailTo >>"
+                      export MOCK_LICENCE="<< pipeline.parameters.mockLicence >>"
+                      yarn build:powerbi
+
+            - run:
+                  name: 'Email / Commit Visual'
+                  command: |
+                      export COMMIT_MSG=$(cat commitmsg)
+                      if  [[ <<parameters.license>> == true ]]
+                      then
+                        echo "App source commit"
+                        node ./packages/powerbi/zutils/commitToCertified.js
+                      elif  [[ <<parameters.onlinelicense>> == true ]] && [[ -z "<< pipeline.parameters.mockLicence >>" ]]
+                      then
+                        echo "Web store commit"
+                        node ./packages/powerbi/zutils/postBuild.js
+                      elif  [[ <<parameters.qaguid>> == true ]]
+                      then
+                        echo "QA guid change and email"
+                        node ./packages/powerbi/zutils/uploadAndEmailBuilds.js
+                      elif  ! [[ -z "<< pipeline.parameters.mockLicence >>" ]]
+                      then
+                        echo "Mock License build and email"
+                        node ./packages/powerbi/zutils/uploadAndEmailBuilds.js
+                      fi
+
+            - store_artifacts:
+                  path: ./packages/powerbi/dist
+                  destination: dist/
+
+jobs:
+    qabuild:
+        <<: *defaults
+        steps:
+            - checkout
+            - npmbuild:
+                  license: false
+                  qaguid: true
+                  onlinelicense: false
+    appbuild:
+        <<: *defaults
+        steps:
+            - checkout
+            - npmbuild:
+                  license: true
+                  qaguid: false
+                  onlinelicense: false
+    onlinebuild:
+        <<: *defaults
+        steps:
+            - checkout
+            - npmbuild:
+                  license: false
+                  qaguid: false
+                  onlinelicense: true
 workflows:
     version: 2
     build_and_test:
