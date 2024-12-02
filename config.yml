@@ -49,7 +49,7 @@ jobs:
         
         - run:
             name: git-update-config
-            command: 'git config --global user.email "devarajns@lumel.com" && git config --global user.name "xViz Suite" && git remote add jenkins https://${githubToken}@github.com/devpowerpro/GanttChart.git'
+            command: 'git config --global user.email "sathishkumarm@lumel.com" && git config --global user.name "xViz Suite" && git remote add jenkins https://${githubToken}@github.com/devpowerpro/GanttChart.git'
         - run:
             name: "git update branch"
             command: git push jenkins HEAD:master --force

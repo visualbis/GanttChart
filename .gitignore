@@ -3,7 +3,6 @@ dist/
 .tmp/
 .history/
 coverage/
-build/
 .DS_Store
 /.env
 buildInfo/

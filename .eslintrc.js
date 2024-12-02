@@ -9,6 +9,7 @@ module.exports = {
     parserOptions: {
         project: "tsconfig.json",
         tsconfigRootDir: ".",
+        extraFileExtensions: ['.mjs']
     },
     plugins: [
         "powerbi-visuals"
