@@ -1,7 +1,7 @@
 import Config from '../Config';
 import EncryptUtil from './EncryptUtil';
 // import { Logger } from '@lumel/valq-engine/dist/Debug/Logger';
-const logger = require('../../build/logger.mjs');
+import logger from './logger';
 
 class OnlineTrialLicenseFetcher {
   public fetch(): Promise<string> {

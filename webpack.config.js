@@ -175,7 +175,7 @@ const webpackConfiguration = (options) => {
             ],
         },
         resolve: {
-            extensions: ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.css'],
+            extensions: ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.css', '.less'],
             alias: {},
             fallback: { path: require.resolve('path-browserify') },
         },

@@ -23,7 +23,7 @@ import AppSourceLicenseMockup from './AppSourceLicenseMockup';
 // @endif
 // import { Logger } from '@lumel/valq-engine/dist/Debug/Logger';
 import { Utils } from '../Utils';
-const logger = require('../../build/logger.mjs');
+import logger from './logger';
 
 export interface IAppSourceLicense {
   plan: string;

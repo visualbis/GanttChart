@@ -4,7 +4,7 @@ import { Buffer } from 'buffer';
 import { decompressFromUint8Array, compressToUint8Array } from 'lz-string';
 import Config from '../Config';
 // import { Logger } from '@lumel/valq-engine/dist/Debug/Logger';
-const logger = require('../../build/logger.mjs');
+import logger from './logger';
 
 export default class EncryptUtil {
   private static convertToUint8Array = (s: string): Uint8Array => {

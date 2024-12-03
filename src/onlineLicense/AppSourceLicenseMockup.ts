@@ -3,7 +3,7 @@ import LicenseInfoResult = powerbi.extensibility.visual.LicenseInfoResult;
 import ServicePlanState = powerbi.ServicePlanState;
 import ServicePlan = powerbi.extensibility.visual.ServicePlan;
 // import { Logger } from '@lumel/valq-engine/dist/Debug/Logger';
-const logger = require('../../build/logger.mjs');
+import logger from './logger';
 
 const USE_INBUILD_MOCK = true;
 
@@ -249,13 +249,13 @@ class AppSourceLicenseMockup {
           logger('Mock License Configured:', 'info');
           // Logger.info('Mock License Configured:');
 
-          logger(this.activeServiceResponse, 'info');
+          logger(`${this.activeServiceResponse}`, 'info');
           // Logger.info(this.activeServiceResponse);
 
           const selectedUserPlans = this.activeServiceResponse[selectedUser];
           logger('Mock License Plans Selected:', 'info');
           // Logger.info('Mock License Plans Selected:');
-          logger(selectedUserPlans, 'info');
+          logger(`${selectedUserPlans}`, 'info');
           // Logger.info(selectedUserPlans);
           resolve({
             licenseInfoResult: {

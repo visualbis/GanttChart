@@ -25,7 +25,7 @@ import { EnumerationKeys } from './EnumerationKeys';
 import EncryptUtil from './EncryptUtil';
 import Config from '../Config';
 // import { Logger } from '@lumel/valq-engine/dist/Debug/Logger';
-const logger = require('../..build/license.mjs');
+import logger from './logger';
 
 export interface ILicense {
   btype: 100 | 200 | 300;

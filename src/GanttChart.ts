@@ -32,7 +32,7 @@ import { MilestoneConfig, JSONArrayDef, DynamicSummaryTableField } from './inter
 import { UtilityMenu } from './UtilityMenu';
 import licensor, { LicenseState } from './onlineLicense/Licensor';
 
-// import { VISUAL_VERSION, COMPONENT_NAME, LICENSE_KEY, CUSTOMER_NAME, COMPONENT_URL } from '../licence';
+import { VISUAL_VERSION, COMPONENT_NAME, LICENSE_KEY, CUSTOMER_NAME, COMPONENT_URL } from './licence';
 //import write Back
 /*
 import { WriteBack } from './WriteBack';
@@ -42,7 +42,7 @@ const anychartCustomBuildMinJs = require('@visualbi/powerbi-editor/dist/gantt/ex
 const moment = require('moment');
 const escape = require('lodash.escape');
 moment.suppressDeprecationWarnings = true;
-const logger = require('../../build/logger.mjs');
+import logger from './onlineLicense/logger';
 
 import {
     DisplayData,
@@ -180,16 +180,16 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
                 },
                 timeOut: 100,
             },
-            // license: {
-            //     VISUAL_VERSION,
-            //     COMPONENT_NAME,
-            //     LICENSE_KEY,
-            //     CUSTOMER_NAME,
-            // },
+            license: {
+                VISUAL_VERSION,
+                COMPONENT_NAME,
+                LICENSE_KEY,
+                CUSTOMER_NAME,
+            },
             propProperties: ProProperties(),
             landingPageConfig: {
                 title: COMPONENT_NAME,
-                // url: COMPONENT_URL,
+                url: COMPONENT_URL,
             },
             fullScreenEditor: true,
             //passing migration config to the bifrost
@@ -200,7 +200,6 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
             licensor: {
                 handler: () => {
                     licensor.init(options.host)
-                    console.log("🚀 ~  handler:")
                     licensor.onChange(() => {
                         console.log("🚀 ~ GanttChart ~ licensor.onChange ~ visualCurrentDate:")
                         const licenseInfo: ILicenseInfo = licensor.getLicenseInfo();
@@ -221,7 +220,6 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
         console.log("🚀 ~ GanttChart ~ validateLicense ~ validateLicense:")
         const isViewModeChanged = this.isViewModeChange(this.option.viewMode)
         licensor.validate(this.option.viewMode, isViewModeChanged, this.visualSettings).catch((err) => {
-
             logger(err, 'warn');
             logger('license.validation.failed ' + err, 'info');
         });

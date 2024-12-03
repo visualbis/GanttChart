@@ -457,7 +457,7 @@ class Builder {
         return new Promise((resolve, reject) => {
             const { BUILD_ENVIRONMENT = DEFAULT_CONFIG.BUILD_ENVIRONMENT } = process.env;
             const onError = (err) => {
-                logger('Webpack build error ' + err ? err : '', 'error');
+                logger(`Webpack build error ${err} `, 'error');
                 reject(err);
             };
             const webConfigPath = Utils.getURL(
@@ -469,8 +469,7 @@ class Builder {
                         webpackConfiguration.default({ buildEnvironment: BUILD_ENVIRONMENT }),
                         (err, stats) => {
                             const statusInfo = stats.toJson();
-                            logger(`🚀 ~ .then ~ ${stats}:`, 'info')
-                            logger(`🚀 ${err}`, 'info')
+                            // logger(`🚀 ~ .then ~ ${stats}:`, 'info')
                             if (err || stats.hasErrors()) {
                                 if (err) {
                                     onError(err);
@@ -505,8 +504,8 @@ class Builder {
             };
             const git = simpleGit(options);
             git
-                .addConfig('user.name', 'Murugan Natarajan')
-                .addConfig('user.email', 'murugann@lumel.com')
+                .addConfig('user.name', 'Sathish kumar')
+                .addConfig('user.email', 'sathishkumarm@lumel.com')
                 .then(() => {
                     logger('Init Git repo done', 'success');
                     resolve(git);
