@@ -1,6 +1,6 @@
 // Auto-generated file, don't make any changes here, check build/run.mjs file
 export default {
-  BUILD_TYPE: `premium`,
+  BUILD_TYPE: `appsource`,
   BUILD_ENVIRONMENT: `prod`,
   BUILD_DATE: `Sat Jan 01 2000 00:00:00 GMT+0530 (India Standard Time)`,
   VERSION: `0.0.0.0`,
