@@ -122,7 +122,7 @@ class Builder {
 
     getEnvironmentConfig(BUILD_ENVIRONMENT) {
         // eg: BUILD_ENVIRONMENT can be dev, qa, appsource, webstore
-        const { BUILD_TYPE = DEFAULT_CONFIG.BUILD_TYPE } = process.env;
+        const { BUILD_TYPE = DEFAULT_CONFIG.BUILD_TYPE, PUBLIC_KEY, SECRET_KEY } = process.env;
         const BUILD_STORE = this.getBuildStore();
         if (
             BUILD_TYPE &&
@@ -144,7 +144,9 @@ class Builder {
             CONFIG[BUILD_TYPE][BUILD_ENVIRONMENT]
         ) {
             // eg: {dev: { guid, public-key, secret_key, product_pricing_url, license_url, content_access }
-            return Object.assign({ BUILD_ENVIRONMENT }, CONFIG[BUILD_TYPE][BUILD_ENVIRONMENT]);
+            const envConfig = Object.assign({ BUILD_ENVIRONMENT }, CONFIG[BUILD_TYPE][BUILD_ENVIRONMENT]);
+            logger(JSON.stringify(envConfig), 'info')
+            return Object.assign(envConfig, { PUBLIC_KEY, SECRET_KEY });
         }
         return null;
     }
@@ -640,7 +642,6 @@ class Builder {
         logger(`CFall`, 'info');
         const { BUILD_ENVIRONMENT = DEFAULT_CONFIG.BUILD_ENVIRONMENT, GIT_TOKEN } = process.env;
         const environmentConfig = this.getEnvironmentConfig(BUILD_ENVIRONMENT);
-        logger(`${environmentConfig} CFall`, 'info');
         const onError = (err) => {
             logger('Error!!! ' + err ? err : '', 'error');
             process.exit(1);
