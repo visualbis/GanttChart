@@ -1,72 +1,112 @@
-version: 2
-
+version: 2.1
+parameters:
+  buildType:
+    type: string
+    default: ''
+  buildEnvironment:
+    type: string
+    default: ''
+  mockLicense:
+    type: string
+    default: ''
+  createTemplate:
+    type: string
+    default: ''
+  serviceUrl:
+    type: string
+    default: ''
+  tenantId:
+      type: string
+      default: ""
+  privateKey:
+      type: string
+      default: ""
+  publicKey:
+      type: string
+      default: ""
+  iconType:
+      type: string
+      default: ""
+  displayName:
+      type: string
+      default: ""
+  emailTo:
+    type: string
+    default: ''
 jobs:
-    build_publish:
-        docker:
-            - image: circleci/node:14-browsers
-        steps:
-            - checkout
-            - run:
-                   name: 'Avoid CI build'
-                   command: |
-                      echo $CIRCLE_SHA1
-                      echo $CIRCLE_PROJECT_USERNAME
-                      git log --format=oneline -n 1 $CIRCLE_SHA1 | tee commitmsg
-                      if grep -q 'builds' commitmsg; then
-                          echo "publish" 
-                      else
-                          circleci-agent step halt
-                      fi
-            - restore_cache:
-                  key: yarn-packages-{{ checksum "yarn.lock" }}
-            - run:
-                  name: install-packages
-                  command: |
-                      yarn install
-            - save_cache:
-                  key: yarn-packages-{{ checksum "yarn.lock" }}
-                  paths:
-                      - .yarn/cache
-                      - .yarn/unplugged
-            - run:
-                  name: Authenticate npm
-                  command: |
-                      echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
-            - run:
-                  name: PowerBI Build based on commit message
-                  command: |
-                      echo $CIRCLE_SHA1
-                      echo $CIRCLE_PROJECT_USERNAME
-                      git log --format=oneline -n 1 $CIRCLE_SHA1 | tee commitmsg
-                      yarn run package
-                  no_output_timeout: 30m
-            - store_artifacts:
-                  path: ./dist
-                  destination: dist/
-            - run:
-                  name: Setup Git and Yarn
-                  command: |
-                      yarn config set npmRegistryServer "https://registry.npmjs.org/"
-                      git config --global user.email "nsdevaraj@gmail.com"
-                      git config --global user.name "NS Devaraj"
-            - run:
-                  name: Publish build
-                  command: |
-                      git config --global user.email "nsdevaraj@gmail.com"
-                      git config --global user.name "Devaraj NS"
-                      git checkout .
-                      yarn publish-packages 
-            - run:
-                  name: Publish to certified
-                  command: |
-                      git log --format=oneline -n 1 $CIRCLE_SHA1 | tee commitmsg
-                      echo '$commitmsg'
-                      export BUILD_TYPE="production"
-                      echo "running commit to certify script"
-                      node ./zutils/commitToCertified.js
-           
+  build:
+    docker:
+      - image: circleci/node:14-browsers
+    environment:
+      NODE_OPTIONS: --max-old-space-size=4096
+    steps:
+      - checkout # When a push or pull request is merged, CI/CD pipeline is triggered and it gets latest code from the repo using git fetch/pull
+      - run:
+          name: Install dependancy packages
+          command: |
+            npm install
+      - run:
+          name: Configure GIT
+          command: |
+            git config --global user.email "sathishkumarm@lumel.com"
+            git config --global user.name "Sathish Kumar"
+      - run:
+          name: Authenticate npm
+          command: |
+            if [ ! -f ".npmrc" ]
+            then
+              echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
+            fi
+      - run:
+          name: Generate dotenv based on CI job parameters
+          command: |
+            if [ -f ".env" ]
+            then
+              rm .env
+            fi
+            if ! [[ -z "<< pipeline.parameters.buildType >>" ]]
+            then
+              echo "BUILD_TYPE=<< pipeline.parameters.buildType >>" >> .env
+            fi
+            if ! [[ -z "<< pipeline.parameters.buildEnvironment >>" ]]
+            then
+              echo "BUILD_ENVIRONMENT=<< pipeline.parameters.buildEnvironment >>" >> .env
+            fi
+            if ! [[ -z "<< pipeline.parameters.mockLicense >>" ]]
+            then
+              echo "MOCK_LICENSE=<< pipeline.parameters.mockLicense >>" >> .env
+            fi
+            if ! [[ -z "<< pipeline.parameters.createTemplate >>" ]]
+            then
+              echo "CREATE_TEMPLATE=<< pipeline.parameters.createTemplate >>" >> .env
+            fi
+            if ! [[ -z "<< pipeline.parameters.serviceUrl >>" ]]
+            then
+              echo "SERVICE_URL=<< pipeline.parameters.serviceUrl >>" >> .env
+            fi
+            if ! [[ -z "<< pipeline.parameters.emailTo >>" ]]
+            then
+              echo "EMAIL_TO=<< pipeline.parameters.emailTo >>" >> .env
+            fi
+      - run:
+          name: Build package
+          command: |
+            npm run build
+      - run:
+          name: Create build template
+          command: |
+            if ! [[ -z "<< pipeline.parameters.createTemplate >>" ]]
+            then
+              echo "Starting create build template process"
+              npm run template
+            else
+              echo "Skipping create build template process"
+            fi
+      - store_artifacts:
+          path: ./dist
+          destination: dist/
 workflows:
-    version: 2
-    build_and_test:
-        jobs:
-            - build_publish
+  build_and_test:
+    when: << pipeline.parameters.buildType >>
+    jobs:
+      - build

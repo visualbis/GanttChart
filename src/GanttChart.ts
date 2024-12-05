@@ -17,6 +17,10 @@ import { SelectionIdBuilder } from '@visualbi/bifrost-powerbi/dist/SelectionIdBu
 import { loadEditor, removeEditor } from '@visualbi/powerbi-editor/dist/gantt/editor';
 import * as SettingsSchemaTypeDef from '@visualbi/bifrost-powerbi/dist/types/SettingsSchemaTypeDef';
 
+import { ILicenseInfo } from './onlineLicense/helper';
+// import { Logger } from '@lumel/valq-engine/dist/Debug/Logger';
+import { Utils } from './Utils'
+import { EnumerationKeys } from './onlineLicense/EnumerationKeys';
 import { VisualSettings, ValidValues } from './settings';
 import { AnychartSelectionManager } from './AnychartSelectionManager';
 import { Util } from './Util';
@@ -26,8 +30,9 @@ import { ProProperties } from './ProProperties';
 import { GanttConditionalFormatting, IMAGE_URL } from './GanttConditionalFormatting';
 import { MilestoneConfig, JSONArrayDef, DynamicSummaryTableField } from './interfaces';
 import { UtilityMenu } from './UtilityMenu';
+import licensor, { LicenseState } from './onlineLicense/Licensor';
 
-import { VISUAL_VERSION, COMPONENT_NAME, LICENSE_KEY, CUSTOMER_NAME, COMPONENT_URL } from '../licence';
+import { VISUAL_VERSION, COMPONENT_NAME, LICENSE_KEY, CUSTOMER_NAME, COMPONENT_URL } from './licence';
 //import write Back
 /*
 import { WriteBack } from './WriteBack';
@@ -37,6 +42,7 @@ const anychartCustomBuildMinJs = require('@visualbi/powerbi-editor/dist/gantt/ex
 const moment = require('moment');
 const escape = require('lodash.escape');
 moment.suppressDeprecationWarnings = true;
+import logger from './onlineLicense/logger';
 
 import {
     DisplayData,
@@ -191,7 +197,138 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
                 handlers: <Record<string, any>>MigrationHandlers.GET_HANDLERS(),
                 settings: MigrationSettings
             },
+            licensor: {
+                handler: () => {
+                    licensor.init(options.host)
+                    licensor.onChange(() => {
+                        console.log("🚀 ~ GanttChart ~ licensor.onChange ~ visualCurrentDate:")
+                        const licenseInfo: ILicenseInfo = licensor.getLicenseInfo();
+                        const licenseStates: LicenseState[] = licensor.getLicenseStates();
+                        const visualCurrentDate: Date = licensor.getVisualCurrentDate();
+                        // this.updater({ licenseInfo });
+                        this.showLicenseInfo(licenseStates, licenseInfo, visualCurrentDate);
+                    })
+                },
+                validateHandler: () => {
+                    this.validateLicense()
+                }
+            }
         });
+    }
+
+    private validateLicense() {
+        console.log("🚀 ~ GanttChart ~ validateLicense ~ validateLicense:")
+        const isViewModeChanged = this.isViewModeChange(this.option.viewMode)
+        licensor.validate(this.option.viewMode, isViewModeChanged, this.visualSettings).catch((err) => {
+            logger(err, 'warn');
+            logger('license.validation.failed ' + err, 'info');
+        });
+    }
+
+    private showLicenseInfo(
+        licenseStates: LicenseState[],
+        licenseInfo: ILicenseInfo,
+        visualCurrentDate: Date
+    ): void {
+        logger('************ Appsource License Information ************', 'info');
+        // Logger.info('************ Appsource License Information ************', true);
+
+        logger('User License Plans:', 'info');
+        // Logger.info('User License Plans:', true);
+
+        logger(licenseInfo.plans.length ? JSON.stringify(licenseInfo.plans, null, 2) : 'Empty', 'info');
+        // Logger.info(
+        //     licenseInfo.plans.length ? JSON.stringify(licenseInfo.plans, null, 2) : 'Empty',
+        //     true
+        // );
+
+        logger('Applied License Plan:', 'info');
+        // Logger.info('Applied License Plan:', true);
+
+        logger(JSON.stringify(licenseInfo.currentPlan, null, 2), 'info');
+        // Logger.info(JSON.stringify(licenseInfo.currentPlan, null, 2), true);
+
+        logger('Stored License Plan:', 'info');
+        // Logger.info('Stored License Plan:', true);
+
+        logger(JSON.stringify(licenseInfo.storedPlan, null, 2), 'info');
+        // Logger.info(JSON.stringify(licenseInfo.storedPlan, null, 2), true);
+
+        logger('Tenant License Plan:', 'info');
+        // Logger.info('Tenant License Plan:', true);
+
+        logger(JSON.stringify(licenseInfo.tenantPlan, null, 2), 'info');
+        // Logger.info(JSON.stringify(licenseInfo.tenantPlan, null, 2), true);
+
+        logger('Model Creation Date:', 'info');
+        // Logger.info('Model Creation Date:', true);
+
+
+        logger(licenseInfo.modelCreationDate, 'info');
+        // Logger.info(licenseInfo.modelCreationDate, true);
+
+        logger('Model Expiry Date:', 'info');
+        // Logger.info('Model Expiry Date:', true);
+
+        logger(licenseInfo.modelExpiryDate, 'info');
+        // Logger.info(licenseInfo.modelExpiryDate, true);
+
+        logger('Current Date:', 'info');
+        // Logger.info('Current Date:', true);
+
+
+        logger(visualCurrentDate.toString(), 'info');
+        // Logger.info(visualCurrentDate.toString(), true);
+
+        logger('Offline License Expiry Date:', 'info');
+        // Logger.info('Offline License Expiry Date:', true);
+
+        logger(licenseInfo.offlineLicenseExpiryDate, 'info');
+        // Logger.info(licenseInfo.offlineLicenseExpiryDate, true);
+
+        logger('License Validation Status:', 'info');
+        // Logger.info('License Validation Status:', true);
+
+
+        logger(licenseStates
+            .map((licenseState) => EnumerationKeys.getLicenseStateKey(licenseState))
+            .join(', '), 'info');
+        // Logger.info(
+        //     licenseStates
+        //         .map((licenseState) => EnumerationKeys.getLicenseStateKey(licenseState))
+        //         .join(', '),
+        //     true
+        // );
+
+        logger('Host Environment:', 'info');
+        // Logger.info('Host Environment:', true);
+
+        logger(
+            EnumerationKeys.getCustomVisualHostEnvKey(licensor.getVisualHost().hostEnv), 'info');
+        // Logger.info(
+        //     EnumerationKeys.getCustomVisualHostEnvKey(licensor.getVisualHost().hostEnv),
+        //     true
+        // );
+
+        logger('License Manager:', 'info');
+        // Logger.info('License Manager:', true);
+
+
+        logger(Utils.isEmpty(licensor.getLicenseManagerApplied())
+            ? 'Empty'
+            : licensor.getLicenseManagerApplied(), 'info');
+        // Logger.info(
+        //     Utils.isEmpty(licensor.getLicenseManagerApplied())
+        //         ? 'Empty'
+        //         : licensor.getLicenseManagerApplied(),
+        //     true
+        // );
+
+        logger('Is Under Free Plan? ' + JSON.stringify(licenseInfo.isFreeLicensePlan), 'info');
+        // Logger.info('Is Under Free Plan? ' + JSON.stringify(licenseInfo.isFreeLicensePlan), true);
+
+        logger('Is Sample Report? ' + JSON.stringify(licenseInfo.isSampleReport), 'info');
+        // Logger.info('Is Sample Report? ' + JSON.stringify(licenseInfo.isSampleReport), true);
     }
 
     initPrintLayout = () => {
@@ -330,7 +467,7 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
         }
         this.forceRender = false;
         this.chartContainer = options.element;
-        this.chartContainer.oncontextmenu =  (ev) => {
+        this.chartContainer.oncontextmenu = (ev) => {
             this._selectionIdBuilder.showContextMenu([], ev.clientX, ev.clientY);
             ev.preventDefault();
             return false;
@@ -372,7 +509,7 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
         if (!this.modifiedData) this.modifiedData = JSON.parse(this.settings.interaction.modifiedData);
     */
         this.editorRules = this.settings.editor.conditionalformatting ? JSON.parse(this.settings.editor.conditionalformatting) : undefined;
-        this.milestoneConfig = this.settings.editor.milestones ? JSON.parse(this.settings.editor.milestones): undefined;
+        this.milestoneConfig = this.settings.editor.milestones ? JSON.parse(this.settings.editor.milestones) : undefined;
         if (status) {
             Util.EMPTYNODE(this.chartContainer);
             // if (options.isFetchingData) return;
@@ -529,7 +666,7 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
         return null;
     }
 
-    public summaryTableOnClick(data, isChartAndTableVisible = false, displayDataPoints?: any, displayDataSelectionIDs?: any){
+    public summaryTableOnClick(data, isChartAndTableVisible = false, displayDataPoints?: any, displayDataSelectionIDs?: any) {
         // Custom Summary Table Integration
         let customGridOptions: any = {};
         if (this.settings.editor.enableCustomSummaryTable && this.settings.editor.customSummaryTableConfig) {
@@ -581,7 +718,7 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
                 this.renderDisplayData(data, this.displayDataPoints, this.displayDataSelectionIDs);
             },
         };
-        this.gridOptions = this.displayData.render(this.displayDataOptions,isChartAndTableVisible);
+        this.gridOptions = this.displayData.render(this.displayDataOptions, isChartAndTableVisible);
     }
 
     private attachDisplayData(data, displayDataPoints?: any, displayDataSelectionIDs?: any) {
@@ -599,7 +736,7 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
         this.displayData.attachDisplayTableIcon(
             this.chartContainer,
             () => {
-                this.summaryTableOnClick(data, false,displayDataPoints,displayDataSelectionIDs)
+                this.summaryTableOnClick(data, false, displayDataPoints, displayDataSelectionIDs)
             },
             !this.showDisplayIcon,
             this.displayDataIconSettings,
@@ -684,7 +821,7 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
                     this.cfAppliedMeasures = ganttConditionalFormatting.getCfAppliedMeasures();
                     this.statusFlagPresentMeasures = ganttConditionalFormatting.getStatusFlagPresentMeasures();
                 }
-                if(!this.settings.chartOptions.showPlannedTaskInParent){ this.updateBaselineColor(tasks);}
+                if (!this.settings.chartOptions.showPlannedTaskInParent) { this.updateBaselineColor(tasks); }
                 treeData = anychartCustomBuildMinJs.data.tree(tasks, 'as-table', null, { id: 'actualKey', baseline: false });
                 chart = anychartCustomBuildMinJs.ganttProject();
                 chart.data(treeData, 'as-tree');
@@ -694,10 +831,10 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
                 if (this.editorRules) {
                     ganttConditionalFormatting = new GanttConditionalFormatting(this.editorRules, options.data, this.measureMinMax, this.settings.chartOptions.ganttChartType, this.JSONArray, this.isGanttEnterprise, options.highContrast);
                     ganttData.forEach((task) => {
-                        if (task.level < this.settings.dataGrid.expandTillLevel){ this.expandLevelsKey.push(task.actualKey); }
+                        if (task.level < this.settings.dataGrid.expandTillLevel) { this.expandLevelsKey.push(task.actualKey); }
                         if (task.periods) {
                             task.periods.forEach((_task) => {
-                                if (_task.markers){
+                                if (_task.markers) {
                                     _task.markers.forEach((marker) => {
                                         marker.cf = { ..._task.cf, ...marker.cf };
                                         marker.cfFormattedValues = { ..._task.cfFormattedValues, ...marker.cfFormattedValues };
@@ -715,8 +852,8 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
                 chart.data(treeData, 'as-tree');
             }
             this.chart = chart;
-            if(this.chart && !this.settings.timeline.ganttzoomrangeenabled && !this.settings.timeline.ganttscrollenable){
-                this.chart.fitAll();           
+            if (this.chart && !this.settings.timeline.ganttzoomrangeenabled && !this.settings.timeline.ganttscrollenable) {
+                this.chart.fitAll();
             }
             this.afterDataGenerationEvents(options, JSONArray, chart, ganttData, treeData);
         } catch (e) {
@@ -724,14 +861,14 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
         }
     }
 
-    private updateBaselineColor(tasks){
+    private updateBaselineColor(tasks) {
         // PBX-15369 From anychart version 8.11.0, even though if don't pass baseLineStart and baseLineEnd, anychart will calculate it automatically.
         // Thus, if we turn off showPlannedTaskInParent toggle, it won't hide the parent planned bar.
         // Hence changing fill and stroke to none for the parent nodes manually.
 
         tasks.forEach((task) => {
-            if(task['childNodes'] ){ // only for parent nodes
-                task['baseline'] = {fill:  'none' , stroke: 'none' , selected: { fill: 'none', stroke: 'none' } };
+            if (task['childNodes']) { // only for parent nodes
+                task['baseline'] = { fill: 'none', stroke: 'none', selected: { fill: 'none', stroke: 'none' } };
             }
         });
     }
@@ -834,7 +971,7 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
                             parentPercentageHelper['progressValue'].base == 0
                                 ? 0
                                 : parentPercentageHelper['progressValue'].finished /
-                                  parentPercentageHelper['progressValue'].base;
+                                parentPercentageHelper['progressValue'].base;
                         parentPercentageHelper['progressValue'] = {
                             base: dateDiff,
                             finished: dateDiff * parentNode.progressValue,
@@ -850,7 +987,7 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
         if (childNode.dataLabel) {
             const dataLabel = childNode.dataLabel;
             parentNode.dataLabel = dataLabel;
-    
+
             parentNode.cf[dataLabel.id] = childNode.cf[dataLabel.id];
             parentNode.cfFormattedValues[dataLabel.id] = childNode.cfFormattedValues[dataLabel.id];
         }
@@ -917,13 +1054,13 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
                     individualTasks[task.childNodes[plannedMinIndex]].cf[this.JSONArray.plannedStartDate[0].name];
                 task['cfFormattedValues'][this.JSONArray.plannedStartDate[0].name] =
                     individualTasks[task.childNodes[plannedMinIndex]].cfFormattedValues[
-                        this.JSONArray.plannedStartDate[0].name
+                    this.JSONArray.plannedStartDate[0].name
                     ];
                 task['cf'][this.JSONArray.plannedEndDate[0].name] =
                     individualTasks[task.childNodes[plannedMinIndex]].cf[this.JSONArray.plannedEndDate[0].name];
                 task['cfFormattedValues'][this.JSONArray.plannedEndDate[0].name] =
                     individualTasks[task.childNodes[plannedMinIndex]].cfFormattedValues[
-                        this.JSONArray.plannedEndDate[0].name
+                    this.JSONArray.plannedEndDate[0].name
                     ];
             }
         }
@@ -1043,7 +1180,7 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
             }
         });
     }
-    
+
     private hideBorderColor() {
         this.settings.dataColors.actualParentBorderColor = '#11ffee00';
         this.settings.dataColors.actualChildBorderColor = '#11ffee00';
@@ -1051,8 +1188,8 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
 
     private getIsLegendPresent(JSONArray: JSONArrayDef) {
         let isShowCFInLegend = false;
-        const { conditionalformatting } = this.settings.editor; 
-        if(conditionalformatting != ""){
+        const { conditionalformatting } = this.settings.editor;
+        if (conditionalformatting != "") {
             const conditionalFormat = JSON.parse(conditionalformatting);
             isShowCFInLegend = conditionalFormat.some((cf) => cf.enabled && cf['showInLegend']);
         }
@@ -1095,13 +1232,13 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
         const chartContainer: HTMLElement = document.createElement('div');
         chartContainer.id = 'chartContainer';
         const isLegendPresent = this.getIsLegendPresent(JSONArray);
-        if (isLegendPresent){
+        if (isLegendPresent) {
             const mainChartContainer: HTMLElement = document.createElement('div');
             mainChartContainer.id = 'mainChartContainer';
             chartContainer.appendChild(mainChartContainer);
-            chartContainer.style.height = options.viewPort.height > 240 ? ((this.settings.legend.vpositionGantt == 'bottom') ? '98%': '90%') : '85%';
+            chartContainer.style.height = options.viewPort.height > 240 ? ((this.settings.legend.vpositionGantt == 'bottom') ? '98%' : '90%') : '85%';
             mainChartContainer.style.height = `calc(100% - ${this.calculateLegendHeight(this.settings.legend)}px)`;
-        } 
+        }
         else chartContainer.style.height = '100%';
         const containerID = isLegendPresent ? 'mainChartContainer' : 'chartContainer';
         this.chartContainer.appendChild(chartContainer);
@@ -1125,13 +1262,13 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
             }
         }
         if (this.settings.interaction.show && this.isGanttEnterprise) this.liveEditing(chart);
-        if (this.settings.summaryTable.show){
+        if (this.settings.summaryTable.show) {
             this.renderDisplayData(options.data);
         }
-        const parsedCF = this.settings.editor.conditionalformatting != '' ? JSON.parse(this.settings.editor.conditionalformatting): ''
+        const parsedCF = this.settings.editor.conditionalformatting != '' ? JSON.parse(this.settings.editor.conditionalformatting) : ''
         const isMeasurePresent = JSONArray.duration.length > 0 || JSONArray.progressBase.length > 0 || JSONArray.progressValue.length > 0 || JSONArray.displayMeasures.length > 0;
         if ((this.milestoneConfig.generalConfig.milestoneLegend &&
-            (JSONArray.milestoneType.length > 0 || JSONArray.milestones.length > 0)) ||  (isMeasurePresent && parsedCF != '' && parsedCF.some((cf) => cf.enabled && cf.showInLegend))
+            (JSONArray.milestoneType.length > 0 || JSONArray.milestones.length > 0)) || (isMeasurePresent && parsedCF != '' && parsedCF.some((cf) => cf.enabled && cf.showInLegend))
         )
             this.standAloneLegend(JSONArray, options);
         if (this.settings.miscellaneous.enableFooter) this.footer(chart, JSONArray);
@@ -1145,9 +1282,8 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
         ) {
             const displayIcon: any = document.getElementsByClassName('vbi-display-data-icon');
             if (displayIcon && displayIcon[0] && displayIcon[0].style) {
-                displayIcon[0].style.cssText = `top:${
-                    this.settings.legend.legendFontSize + 15
-                }px !important;right:50px !important`;
+                displayIcon[0].style.cssText = `top:${this.settings.legend.legendFontSize + 15
+                    }px !important;right:50px !important`;
             }
         }
         // Bookmarking
@@ -1257,7 +1393,7 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
         credits.url(url);
         const creditDiv = document.getElementsByClassName('anychart-credits');
         if (creditDiv && creditDiv[0] && creditDiv[0].childNodes && creditDiv[0].childNodes[0]) {
-            if(this.getIsLegendPresent(JSONArray)){
+            if (this.getIsLegendPresent(JSONArray)) {
                 const parentContainer = document.getElementById('chartContainer');
                 parentContainer.appendChild(creditDiv[0]);
             }
@@ -1395,11 +1531,11 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
     }
 
     private calculateLegendHeight(legend) {
-        const {legendFontSize, titleText, vpositionGantt} = legend
+        const { legendFontSize, titleText, vpositionGantt } = legend
         const minSize = 8;
         const sizeDiff = legendFontSize - minSize;
         let coefficient = vpositionGantt === 'top' ? 2.5 : 3;
-       
+
         if (titleText != '') {
             // Calculate the minimum coefficient with a threshold
             const minCoefficient = Math.min(0.05 * (sizeDiff <= 0 ? -3.75 : sizeDiff), 2);
@@ -1408,13 +1544,13 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
             coefficient = 5 - minCoefficient;
         }
         // Calculate and return the div height
-        
+
         return legendFontSize * coefficient;
     }
 
     private standAloneLegend(JSONArray: JSONArrayDef, options: RenderOptions) {
         // create and setup legend
-        const { highContrast , data } = options;
+        const { highContrast, data } = options;
         const { titleText, vpositionGantt } = this.settings.legend;
 
         const legendDiv: HTMLElement = document.createElement('div');
@@ -1428,9 +1564,9 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
         const legendItems = [];
         const eachIndex = 0;
         const milestoneIconTypes = [];
-        if(this.milestoneConfig.generalConfig.milestoneLegend){
+        if (this.milestoneConfig.generalConfig.milestoneLegend) {
             const milestoneLegendItems = this.createMilestoneLegendItems(eachIndex, JSONArray, highContrast);
-            if(milestoneLegendItems.length){
+            if (milestoneLegendItems.length) {
                 legendItems.push(...milestoneLegendItems);
                 milestoneLegendItems.forEach((item) => {
                     if (typeof item.iconType !== 'function') {
@@ -1441,10 +1577,10 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
             }
         }
         const cfLegendData = this.createCFLegendData(eachIndex, data, highContrast, milestoneIconTypes, JSONArray);
-        if(cfLegendData.length){
+        if (cfLegendData.length) {
             legendItems.push(...cfLegendData);
         }
-        if(legendItems.length){
+        if (legendItems.length) {
             if (vpositionGantt == 'top') {
                 const parentContainer = document.getElementById('chartContainer');
                 parentContainer.insertAdjacentElement('afterbegin', legendDiv);
@@ -1557,9 +1693,9 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
         return legendItems;
     }
 
-    private drawCFLegendContainer(legend, legendItems, highContrast){
+    private drawCFLegendContainer(legend, legendItems, highContrast) {
         // Legend Title
-        const { hposition, titleText, vpositionGantt, legendFontSize, color} = this.settings.legend;
+        const { hposition, titleText, vpositionGantt, legendFontSize, color } = this.settings.legend;
         const { isHighContrast, foreground } = highContrast;
         const titleContent = titleText == '' ? '' : titleText;
         const legendContainer = document.getElementById('legendContainer');
@@ -1573,7 +1709,7 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
             legend.title().fontFamily(this.settings.chartOptions.fontfamily);
             legend.title().fontColor(isHighContrast ? foreground : color);
         }
-        
+
         //legend common properties
         legend.align(hposition);
         legend.iconSize(legendFontSize);
@@ -1589,20 +1725,20 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
         legend.container().credits().enabled(false);
     }
 
-    private createCFLegendData(eachIndex: number, data: Data, highContrast: HighContrastColors, milestoneIconTypes: string[], JSONArray: JSONArrayDef){
+    private createCFLegendData(eachIndex: number, data: Data, highContrast: HighContrastColors, milestoneIconTypes: string[], JSONArray: JSONArrayDef) {
         const legendItems = [];
-        if(this.settings.editor.conditionalformatting != ""){
+        if (this.settings.editor.conditionalformatting != "") {
             const conditionalFormat = JSON.parse(this.settings.editor.conditionalformatting);
             conditionalFormat.forEach((cf) => {
-                const isValidRule = cf.highlighedMeasure === JSONArray.duration?.[0]?.name 
-                    || cf.highlighedMeasure === JSONArray.progressBase?.[0]?.name 
-                    || cf.highlighedMeasure === JSONArray.progressValue?.[0]?.name  
+                const isValidRule = cf.highlighedMeasure === JSONArray.duration?.[0]?.name
+                    || cf.highlighedMeasure === JSONArray.progressBase?.[0]?.name
+                    || cf.highlighedMeasure === JSONArray.progressValue?.[0]?.name
                     || JSONArray.displayMeasures?.some((c) => c?.name === cf.highlighedMeasure);
-                if(isValidRule){
-                    if(cf.enabled && cf['showInLegend']){
-                        if(cf.conditions[0].ruleType !== 'targetValue'){
+                if (isValidRule) {
+                    if (cf.enabled && cf['showInLegend']) {
+                        if (cf.conditions[0].ruleType !== 'targetValue') {
                             const legendItem = this.createCfLegendItems(cf, eachIndex, highContrast, milestoneIconTypes);
-                            if(legendItem.legendItems.length){
+                            if (legendItem.legendItems.length) {
                                 legendItems.push(...legendItem.legendItems);
                                 eachIndex = legendItem.eachIndex;
                             }
@@ -1762,7 +1898,7 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
             isSomeDimMeasuerLengthZero = isSomeDimMeasuerLengthZero || dimension.values.length > 0;
             const metaObj = dimensionMetaData.find((dimMeasure) => dimMeasure.name == dimension.name);
             const dimObj = dimensionObject.find((dimMeasure) => dimMeasure.name == dimension.name);
-            const objectMergedDimension = this.mergeDimensionMetaData( dimension, metaObj, dimObj, dimensionsMeasuresObj);
+            const objectMergedDimension = this.mergeDimensionMetaData(dimension, metaObj, dimObj, dimensionsMeasuresObj);
             if (this.isDateField(objectMergedDimension.type)) {
                 this.dateDimensionArray.push(objectMergedDimension);
             }
@@ -1887,7 +2023,7 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
 
 
     private mergeMilestoneConfigMetaData(milestones) {
-        const { milestoneFieldConfig, singleConfig }= this.milestoneConfig;
+        const { milestoneFieldConfig, singleConfig } = this.milestoneConfig;
         milestones.forEach((milestone) => {
             const milestoneConfig = milestoneFieldConfig[milestone.name];
             if (milestoneConfig) {
@@ -2364,9 +2500,9 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
             taskChildrens = {},
             nodeLevels = [],
             selectedFillColor = this.getSelectedFillColor(highContrast);
-            if(JSONArray.milestones.length !== 0){
-                this.isMilestonePresentInField = true;
-            }
+        if (JSONArray.milestones.length !== 0) {
+            this.isMilestonePresentInField = true;
+        }
         JSONArray.taskName[0].values.forEach((task, taskIndex) => {
             const selectionId = this._selectionIdBuilder.getSelectionId({
                 categoricalIndex: categoryIndex,
@@ -2376,7 +2512,7 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
                 const node = this.initializeNode(taskCategory, taskCategoryIndex, taskIndex, selectionId);
                 node.cf[taskCategory.name] = taskCategory.values[taskIndex];
                 node.cfFormattedValues[taskCategory.name] = taskCategory.formattedValues[taskIndex];
-                const { actualParentFillColor, actualParentTrackColor, actualChildFillColor, actualChildTrackColor, plannedFillColor} = this.getColors(JSONArray, JSONArray.taskName[0], taskIndex, highContrast);
+                const { actualParentFillColor, actualParentTrackColor, actualChildFillColor, actualChildTrackColor, plannedFillColor } = this.getColors(JSONArray, JSONArray.taskName[0], taskIndex, highContrast);
                 if (JSONArray.tooltips.length > 0 && taskCategoryIndex === JSONArray.taskName.length - 1) {
                     this.tooltipsPoints(node, JSONArray, taskIndex);
                 }
@@ -2419,9 +2555,9 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
                             node['progress'] = { fill: progress, selected: { fill: selectedFillColor || progress } };
                         }
                         const baselineColor = dataGridMembersObject[taskIndex] && dataGridMembersObject[taskIndex].plannedFillColor;
-                        node['baseline'] = { fill: baselineColor, selected: { fill: selectedFillColor || baselineColor }};
+                        node['baseline'] = { fill: baselineColor, selected: { fill: selectedFillColor || baselineColor } };
                     }
-                    if ( this.settings.dataColors.configurationTypeIndividual !== 'all' && this.settings.chartOptions.ganttChartType !== 'gantt')
+                    if (this.settings.dataColors.configurationTypeIndividual !== 'all' && this.settings.chartOptions.ganttChartType !== 'gantt')
                         node['fill'] = dataGridMembersObject[taskIndex] && dataGridMembersObject[taskIndex].actualChildFillColor;
                 } else {
                     if (this.settings.chartOptions.ganttChartType == 'gantt' && JSONArray.taskName.length == 1) {
@@ -2434,19 +2570,19 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
                     dataGridMembers[taskIndex] = taskCategory['formattedValues'][taskIndex];
                     if ((JSONArray.taskName.length > 1 && this.settings.dataColors.configurationType !== 'all') ||
                         (JSONArray.taskName.length == 1 && this.settings.dataColors.configurationTypeIndividual !== 'all')) {
-                        node['actual'] = {fill: actualParentFillColor, selected: { fill: selectedFillColor || actualParentFillColor }};
-                        node['grouping-tasks'] = { fill: actualParentFillColor, selected: { fill: selectedFillColor || actualParentFillColor }};
-                        node['progress'] = {fill: actualParentTrackColor, selected: { fill: selectedFillColor || actualParentTrackColor }};
-                        node['baseline'] = {fill: plannedFillColor, selected: { fill: selectedFillColor || plannedFillColor }};
+                        node['actual'] = { fill: actualParentFillColor, selected: { fill: selectedFillColor || actualParentFillColor } };
+                        node['grouping-tasks'] = { fill: actualParentFillColor, selected: { fill: selectedFillColor || actualParentFillColor } };
+                        node['progress'] = { fill: actualParentTrackColor, selected: { fill: selectedFillColor || actualParentTrackColor } };
+                        node['baseline'] = { fill: plannedFillColor, selected: { fill: selectedFillColor || plannedFillColor } };
                     }
                     this.settings.dataColors.configurationTypeIndividual !== 'all' && this.settings.chartOptions.ganttChartType !== 'gantt' ? (node['fill'] = actualChildFillColor) : null;
-                    dataGridMembersObject[taskIndex] = { actualChildFillColor, actualChildTrackColor, actualParentFillColor, actualParentTrackColor, plannedFillColor};
+                    dataGridMembersObject[taskIndex] = { actualChildFillColor, actualChildTrackColor, actualParentFillColor, actualParentTrackColor, plannedFillColor };
                 }
                 if (JSONArray.taskName.length == 1) {
                     this.columnMeasureDataLabel(node, JSONArray, taskIndex);
                     this.generateLeafNodeData(node, JSONArray, taskIndex, highContrast);
                 }
-                this.generateTaskHelper( selectionIds, selectionId, node, individualTasks,  taskArray,  taskChildrens,  JSONArray,  highContrast,  taskIndex,  nodeLevels);
+                this.generateTaskHelper(selectionIds, selectionId, node, individualTasks, taskArray, taskChildrens, JSONArray, highContrast, taskIndex, nodeLevels);
                 this.childNodesToParent(individualTasks, node);
             });
         });
@@ -2882,7 +3018,7 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
                     this.settings.chartOptions.durationUnit,
                 );
             }
-            if (JSONArray.progressValue[0] && JSONArray.progressValue[0].values){
+            if (JSONArray.progressValue[0] && JSONArray.progressValue[0].values) {
                 if (JSONArray.progressBase.length == 0) {
                     nodeDate['progressValue'] = JSONArray.progressValue[0].formattedValues[taskIndex]
                         ? JSONArray.progressValue[0].formattedValues[taskIndex] / 100
@@ -2909,12 +3045,12 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
             if (JSONArray.plannedStartDate.length > 0 && JSONArray.plannedEndDate.length > 0) {
                 nodeDate['baselineStart'] = this.getUnixTimeStamp(JSONArray.plannedStartDate[0].values[taskIndex]);
                 nodeDate['baselineEnd'] = this.getUnixTimeStamp(JSONArray.plannedEndDate[0].values[taskIndex]);
-                
-                if(nodeDate['baselineStart'] == nodeDate['baselineEnd'] && nodeDate['baselineStart'] !== null && nodeDate['baselineStart'] !== undefined){
-                    nodeDate['baselineEnd']+=1;
+
+                if (nodeDate['baselineStart'] == nodeDate['baselineEnd'] && nodeDate['baselineStart'] !== null && nodeDate['baselineStart'] !== undefined) {
+                    nodeDate['baselineEnd'] += 1;
                 }
-            
-            } 
+
+            }
             this.getMilestoneColors(nodeDate, taskIndex, JSONArray, highContrast);
             if (this.milestoneConfig.generalConfig.milestoneType == 'marker')
                 this.generateMarker(nodeDate, JSONArray, taskIndex, highContrast);
@@ -3177,7 +3313,7 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
                 }
             } else {
                 const imageSource = singleConfig.image;
-                if (generalConfig.isCustomImage && imageSource ) {
+                if (generalConfig.isCustomImage && imageSource) {
                     type = IMAGE_URL;
                     imageUrl = imageSource;
                 } else {
@@ -3371,8 +3507,8 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
         const name = taskNameFormattedValues
             ? taskNameFormattedValues[taskIndex]
             : this.settings.chartOptions.ganttChartType == 'gantt'
-            ? node.name + ' ' + milestone.label
-            : milestone.label;
+                ? node.name + ' ' + milestone.label
+                : milestone.label;
         return {
             actualKey: node.actualKey + '~!~' + milestone.name + milestoneIndex,
             liveEditingKey: node.liveEditingKey + '~!~' + milestone.name,
@@ -3398,14 +3534,14 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
                     milestoneDataLabelType == 'default' || !isDataLabelEnabled
                         ? name
                         : dataLabelFormattedValues
-                        ? dataLabelFormattedValues[taskIndex]
-                        : '',
+                            ? dataLabelFormattedValues[taskIndex]
+                            : '',
                 modifiedValue:
                     milestoneDataLabelType == 'default' || !isDataLabelEnabled
                         ? name
                         : dataLabelFormattedValues
-                        ? dataLabelFormattedValues[taskIndex]
-                        : '',
+                            ? dataLabelFormattedValues[taskIndex]
+                            : '',
                 format: dataLabelDetails.format,
                 numberFormatting: dataLabelDetails.numberFormatting,
                 id: dataLabelDetails.id,
@@ -3563,6 +3699,6 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
         parents.forEach(parent => addChildren(parent));
 
         return orderedTasks;
-    }  
+    }
 
 }
