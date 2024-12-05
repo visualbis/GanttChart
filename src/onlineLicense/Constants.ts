@@ -2,7 +2,7 @@ export const EXPIRY_DAYS: number = 30;
 
 export const EXPIRY_ALERT_DAYS: number = 4;
 
-export type BuildType = 'premium' | 'enterprise';
+export type BuildType = 'appsource' | 'private';
 
 export type BuildEnvironment = 'prod' | 'qa' | 'dev';
 
@@ -26,8 +26,8 @@ interface IPlanNames {
 }
 
 export const BUILD_TYPES: IBuildTypes = {
-  PREMIUM: 'premium',
-  ENTERPRISE: 'enterprise',
+  APPSOURCE: 'appsource',
+  PRIVATE: 'private',
 };
 
 export const BUILD_ENVIRONMENT: IBuildEnvironments = {
