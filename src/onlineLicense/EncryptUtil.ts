@@ -18,15 +18,17 @@ export default class EncryptUtil {
   };
 
   public static decrypt = (content: string): string => {
-    const publicKey = EncryptUtil.convertToUint8Array(Config.PUBLIC_KEY);
+    const { PUBLIC_KEY } = process.env;
+    const publicKey = EncryptUtil.convertToUint8Array(PUBLIC_KEY ?? Config.PUBLIC_KEY);
     const contentCode = EncryptUtil.convertToUint8Array(content);
     const decompressContent = decompressFromUint8Array(nacl.sign.open(contentCode, publicKey));
     return decompressContent || '';
   };
 
   public static encrypt = (content: string): string => {
+    const { SECRET_KEY } = process.env
     const compressedCode = compressToUint8Array(content);
-    const secretKey = EncryptUtil.convertToUint8Array(Config.SECRET_KEY);
+    const secretKey = EncryptUtil.convertToUint8Array(SECRET_KEY ?? Config.SECRET_KEY);
     const signedCode = nacl.sign(compressedCode, secretKey);
     const base64Str = Buffer.from(signedCode).toString('base64');
     return base64Str;

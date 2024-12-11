@@ -122,7 +122,7 @@ class Builder {
 
     getEnvironmentConfig(BUILD_ENVIRONMENT) {
         // eg: BUILD_ENVIRONMENT can be dev, qa, appsource, webstore
-        const { BUILD_TYPE = DEFAULT_CONFIG.BUILD_TYPE } = process.env;
+        const { BUILD_TYPE = DEFAULT_CONFIG.BUILD_TYPE, PUBLIC_KEY, SECRET_KEY } = process.env;
         const BUILD_STORE = this.getBuildStore();
         if (
             BUILD_TYPE &&
@@ -144,7 +144,9 @@ class Builder {
             CONFIG[BUILD_TYPE][BUILD_ENVIRONMENT]
         ) {
             // eg: {dev: { guid, public-key, secret_key, product_pricing_url, license_url, content_access }
-            return Object.assign({ BUILD_ENVIRONMENT }, CONFIG[BUILD_TYPE][BUILD_ENVIRONMENT]);
+            const envConfig = Object.assign({ BUILD_ENVIRONMENT }, CONFIG[BUILD_TYPE][BUILD_ENVIRONMENT]);
+            logger(JSON.stringify(envConfig), 'info')
+            return Object.assign(envConfig, { PUBLIC_KEY, SECRET_KEY });
         }
         return null;
     }
@@ -531,11 +533,13 @@ class Builder {
                     if (!err) {
                         const output = [];
                         tags.split('\n').forEach((para) => {
-                            if (para && para.split('\t')[1].match(/^refs\/tags\//)) {
-                                output.push(para.split('\t')[1].replace(/^refs\/tags\//, ''));
+                            const currentPara = para.split('\t')[1];
+                            const tagRegex = /^refs\/tags\//;
+                            if (para && currentPara.match(tagRegex)) {
+                                output.push(currentPara.replace(tagRegex, ''));
                             }
                         });
-                        const version = this.getVersion();
+                        const version = this.getVersion(); // NOTE: Tag created in git and version present in pbiviz should be same 
                         const tagName = `v${version}`;
                         if (output.includes(tagName)) {
                             reject(new Error(`Git tag "${tagName}" already exist in repo "${BUILD_REPO_NAME}"`));
@@ -587,9 +591,9 @@ class Builder {
         logger(`Commit started for build repo`, 'info');
         const version = this.getVersion();
         const tagName = `v${version}`;
-        await git.add('./*').commit(`Commit version ${tagName}`);
-        await git.tag([`--force`, tagName, '-m', 'NewVersionCreation']);
-        await git.push(['origin', tagName, `--force`]);
+        await git.add('./*').commit(`Commit version ${tagName}`); // Staging and committing
+        await git.tag([`--force`, tagName, '-m', 'NewVersionCreation']); //  creating a separate tag
+        await git.push(['origin', tagName, `--force`]); // pushing the commits
         await git.push(['origin', 'main', `--force`]);
         logger(`Commit done`, 'success');
     }
@@ -638,9 +642,8 @@ class Builder {
 
     start() {
         logger(`CFall`, 'info');
-        const { BUILD_ENVIRONMENT = DEFAULT_CONFIG.BUILD_ENVIRONMENT, GIT_TOKEN } = process.env;
+        const { BUILD_ENVIRONMENT = DEFAULT_CONFIG.BUILD_ENVIRONMENT, GIT_TOKEN } = process.env; // #NEEDTOCHECK From where, they are setting the GIT_TOKEN ?
         const environmentConfig = this.getEnvironmentConfig(BUILD_ENVIRONMENT);
-        logger(`${environmentConfig} CFall`, 'info');
         const onError = (err) => {
             logger('Error!!! ' + err ? err : '', 'error');
             process.exit(1);
