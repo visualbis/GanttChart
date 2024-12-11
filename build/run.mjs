@@ -533,11 +533,13 @@ class Builder {
                     if (!err) {
                         const output = [];
                         tags.split('\n').forEach((para) => {
-                            if (para && para.split('\t')[1].match(/^refs\/tags\//)) {
-                                output.push(para.split('\t')[1].replace(/^refs\/tags\//, ''));
+                            const currentPara = para.split('\t')[1];
+                            const tagRegex = /^refs\/tags\//;
+                            if (para && currentPara.match(tagRegex)) {
+                                output.push(currentPara.replace(tagRegex, ''));
                             }
                         });
-                        const version = this.getVersion();
+                        const version = this.getVersion(); // NOTE: Tag created in git and version present in pbiviz should be same 
                         const tagName = `v${version}`;
                         if (output.includes(tagName)) {
                             reject(new Error(`Git tag "${tagName}" already exist in repo "${BUILD_REPO_NAME}"`));
@@ -589,9 +591,9 @@ class Builder {
         logger(`Commit started for build repo`, 'info');
         const version = this.getVersion();
         const tagName = `v${version}`;
-        await git.add('./*').commit(`Commit version ${tagName}`);
-        await git.tag([`--force`, tagName, '-m', 'NewVersionCreation']);
-        await git.push(['origin', tagName, `--force`]);
+        await git.add('./*').commit(`Commit version ${tagName}`); // Staging and committing
+        await git.tag([`--force`, tagName, '-m', 'NewVersionCreation']); //  creating a separate tag
+        await git.push(['origin', tagName, `--force`]); // pushing the commits
         await git.push(['origin', 'main', `--force`]);
         logger(`Commit done`, 'success');
     }
@@ -640,7 +642,7 @@ class Builder {
 
     start() {
         logger(`CFall`, 'info');
-        const { BUILD_ENVIRONMENT = DEFAULT_CONFIG.BUILD_ENVIRONMENT, GIT_TOKEN } = process.env;
+        const { BUILD_ENVIRONMENT = DEFAULT_CONFIG.BUILD_ENVIRONMENT, GIT_TOKEN } = process.env; // #NEEDTOCHECK From where, they are setting the GIT_TOKEN ?
         const environmentConfig = this.getEnvironmentConfig(BUILD_ENVIRONMENT);
         const onError = (err) => {
             logger('Error!!! ' + err ? err : '', 'error');

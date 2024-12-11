@@ -53,6 +53,10 @@ jobs:
       - run:
           name: Authenticate npm
           command: |
+            if [ -f ".npmrc" ]
+            then
+              rm .npmrc
+            fi
             if [ ! -f ".npmrc" ]
             then
               echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
