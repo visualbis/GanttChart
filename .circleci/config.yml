@@ -68,13 +68,13 @@ jobs:
             then
               rm .env
             fi
-            if ! [[ -z "<< $PUBLIC_KEY >>" ]]
+            if ! [[ -z "$PUBLIC_KEY" ]]
             then
-              echo "PUBLIC_KEY=<< $PUBLIC_KEY >>" >> .env
+              echo "PUBLIC_KEY=$PUBLIC_KEY" >> .env
             fi
-            if ! [[ -z "<< $SECRET_KEY >>" ]]
+            if ! [[ -z "$SECRET_KEY" ]]
             then
-              echo "SECRET_KEY=<< $SECRET_KEY >>" >> .env
+              echo "SECRET_KEY=$SECRET_KEY" >> .env
             fi
             if ! [[ -z "<< pipeline.parameters.buildType >>" ]]
             then
