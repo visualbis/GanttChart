@@ -57,10 +57,7 @@ jobs:
             then
               rm .npmrc
             fi
-            if [ ! -f ".npmrc" ]
-            then
-              echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
-            fi
+            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
       - run:
           name: Generate dotenv based on CI job parameters
           command: |
