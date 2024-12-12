@@ -130,6 +130,7 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
     public currentArray: any[] = [];
     public option: any;
     public markerItems: any[] = [];
+    private prevViewMode: boolean;
 
     constructor(options: VisualConstructorOptions) {
         super(options, VisualSettings, ValidValues);
@@ -216,9 +217,17 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
         });
     }
 
+    private checkIsModeChange(viewMode) {
+        let isViewModeChange = false;
+        if (this.prevViewMode !== undefined && this.prevViewMode !== viewMode) {
+            isViewModeChange = true;
+        }
+        this.prevViewMode = viewMode;
+        return isViewModeChange;
+    }
+
     private validateLicense() {
-        console.log("🚀 ~ GanttChart ~ validateLicense ~ validateLicense:")
-        const isViewModeChanged = this.isViewModeChange(this.option.viewMode)
+        const isViewModeChanged = this.checkIsModeChange(this.option.viewMode)
         licensor.validate(this.option.viewMode, isViewModeChanged, this.visualSettings).catch((err) => {
             logger(err, 'warn');
             logger('license.validation.failed ' + err, 'info');
