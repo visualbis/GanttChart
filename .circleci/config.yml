@@ -41,7 +41,7 @@ jobs:
       NODE_OPTIONS: --max-old-space-size=4096
     steps:
       - checkout # When a push or pull request is merged, CI/CD pipeline is triggered and it gets latest code from the repo using git fetch/pull
-       - run:
+      - run:
           name: Authenticate npm
           command: |
             if [ -f ".npmrc" ]
