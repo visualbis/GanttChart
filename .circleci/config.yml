@@ -41,6 +41,14 @@ jobs:
       NODE_OPTIONS: --max-old-space-size=4096
     steps:
       - checkout # When a push or pull request is merged, CI/CD pipeline is triggered and it gets latest code from the repo using git fetch/pull
+       - run:
+          name: Authenticate npm
+          command: |
+            if [ -f ".npmrc" ]
+            then
+              rm .npmrc
+            fi
+            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
       - run:
           name: Install dependancy packages
           command: |
@@ -50,14 +58,6 @@ jobs:
           command: |
             git config --global user.email "sathishkumarm@lumel.com"
             git config --global user.name "Sathish Kumar"
-      - run:
-          name: Authenticate npm
-          command: |
-            if [ -f ".npmrc" ]
-            then
-              rm .npmrc
-            fi
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
       - run:
           name: Generate dotenv based on CI job parameters
           command: |
