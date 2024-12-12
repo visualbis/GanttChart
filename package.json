@@ -19,7 +19,9 @@
     "moment": "2.29.4",
     "react": "16.14.0",
     "react-dom": "16.14.0",
-    "lz-string": "^1.4.4"
+    "lz-string": "^1.4.4",
+    "ajv": "6.12.6",
+    "ajv-keywords": "4.0.0"
   },
   "devDependencies": {
     "@types/jasmine": "3.7.4",
