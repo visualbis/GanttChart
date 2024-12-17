@@ -52,7 +52,7 @@ jobs:
       - run:
           name: Install dependancy packages
           command: |
-            npm install
+            npm install --legacy-peer-deps
       - run:
           name: Configure GIT
           command: |
