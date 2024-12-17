@@ -99,7 +99,7 @@ async function initVisualCodeCommit(componentName = '', buildType = '') {
                 logger(`Cloning Git repo ${component.name
                     }`,
                     "info");
-                await simpleGit(__dirname).clone(`https: //${process.env.GIT_TOKEN}@github.com/devpowerpro/${component.name}.git`, BUILD_REPO_PATH, ['--depth=1']);
+                await simpleGit(__dirname).clone(`https://${process.env.GIT_TOKEN}@github.com/devpowerpro/${component.name}.git`, BUILD_REPO_PATH, ['--depth=1']);
             } catch (e) {
                 console.log(e);
                 logger(`Failed to clone Git repo ${component.name
