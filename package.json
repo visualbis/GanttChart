@@ -19,7 +19,10 @@
     "moment": "2.29.4",
     "react": "16.14.0",
     "react-dom": "16.14.0",
-    "lz-string": "^1.4.4"
+    "lz-string": "^1.4.4",
+    "ajv": "6.12.6",
+    "ajv-keywords": "4.0.0",
+    "json-templater": "^1.2.0"
   },
   "devDependencies": {
     "@types/jasmine": "3.7.4",
@@ -76,6 +79,7 @@
     "start": "pbiviz start",
     "build": "node build/run.mjs BUILD",
     "package": "node build/run.mjs BUILD",
+    "certify": "node src/ZUtils/commitToCertified.js",
     "template": "node build/run.mjs TEMPLATE",
     "audit": "yarn npm audit --environment production --severity moderate",
     "dist": "pbiviz package",

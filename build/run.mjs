@@ -13,7 +13,7 @@ import preprocessor from './preprocessor.mjs';
 import { CONFIG } from './config.mjs';
 import 'dotenv/config';
 
-const DEMO_REPO_NAME = 'valqdemos';
+const DEMO_REPO_NAME = 'GanttStoreBuild';
 const BUILD_REPO_NAME = 'GanttStoreBuild';
 const DEFAULT_NO_OF_OFFLINE_LICENSE_DAYS = 30;
 const PREDISTINATION_PATH = 'pre-dist';
