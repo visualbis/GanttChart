@@ -22,9 +22,7 @@
     "lz-string": "^1.4.4",
     "ajv": "6.12.6",
     "ajv-keywords": "4.0.0",
-    "json-templater": "^1.2.0",
-    "ajv": "6.12.6",
-    "ajv-keywords": "4.0.0"
+    "json-templater": "^1.2.0"
   },
   "devDependencies": {
     "@types/jasmine": "3.7.4",
