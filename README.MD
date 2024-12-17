@@ -5,5 +5,5 @@ npm start
 ```
 Package:
 ```bash
-npm run build  
+npm run build 
 ```
