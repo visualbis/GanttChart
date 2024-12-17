@@ -1,0 +1,14 @@
+{
+    "visual": {
+        "name": "{{nameWithNoSpace}}ByxViz",
+        "guid": "{{originalGUID}}",
+        "displayName": "{{name}} - xViz v{{version}}",
+        "version": "{{version}}",
+        "description": "{{description}}",
+        "supportUrl": "https://xviz.com/"
+    },
+    "author": {
+        "name": "xViz",
+        "email": "support@xviz.com"
+    }
+}

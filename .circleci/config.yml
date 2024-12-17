@@ -114,8 +114,89 @@ jobs:
       - store_artifacts:
           path: ./dist
           destination: dist/
+    
+  build_publish:
+      docker:
+          - image: circleci/node:14-browsers
+      steps:
+          - checkout
+          - run:
+                name: 'Check is CI Required'
+                command: |
+                    git log --format=oneline -n 1 $CIRCLE_SHA1 | tee commitmsg 
+                    GIT_COMMIT_DESC=$(awk '{print $3}' commitmsg)
+                    if ! [[ $GIT_COMMIT_DESC =~ ^(certify)$ ]];
+                    then
+                        echo $GIT_COMMIT_DESC
+                        circleci-agent step halt
+                    else
+                        echo $GIT_COMMIT_DESC
+                    fi
+
+          - run:
+                name: Authenticate npm
+                command: |
+                    echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+
+          - restore_cache:
+                key: yarn-packages-{{ checksum "yarn.lock" }}
+          - run:
+                name: install-packages
+                command: |
+                    yarn install
+          - save_cache:
+                key: yarn-packages-{{ checksum "yarn.lock" }}
+                paths:
+                    - .yarn/cache
+                    - .yarn/unplugged
+          - run:
+                name: Clean files
+                command: |
+                    yarn clean
+          # - run:
+          #       name: Build files
+          #       command: |
+          #           yarn build:packages
+
+          # - run:
+          #       name: Publish build
+          #       command: |
+          #           git config --global user.email "sathishkumarm@lumel.com"
+          #           git config --global user.name "Sathish kumar"
+          #           git checkout .
+          #           yarn publish-packages 
+
+          - run:
+                name: Publish to certified
+                command: | 
+                      git log --format=oneline -n 1 $CIRCLE_SHA1 | tee commitmsg 
+                      GIT_COMMIT_DESC=$(awk '{print $3}' commitmsg)
+                      export COMMIT_MSG=$(cat commitmsg)
+                      node src/ZUtils/commitToCertified.js
+                      # if ! [[ $GIT_COMMIT_DESC =~ ^(npmupdate)$ ]];
+                      # then
+                      #   echo $GIT_COMMIT_DESC
+                      #   circleci-agent step halt
+                      # else
+                      #   echo $GIT_COMMIT_DESC
+                      # fi 
+          # - run:
+          #       name: Trigger version bump
+          #       command: | 
+          #           node triggerUpdate.js
+          #           rm commitmsg
+          #           git remote rm origin
+          #           git remote add origin https://nsdevaraj:$GIT_TOKEN@github.com/visualbis/xviz.git
+          #           git config --global user.email "devarajns@lumel.com"
+          #           git config --global user.name "Devaraj NS"
+          #           git add .
+          #           git commit -m "chore(ver): bump"
+          #           git push origin main
 workflows:
   build_and_test:
     when: << pipeline.parameters.buildType >>
     jobs:
       - build
+  build_to_certify:
+    jobs:
+      - build_publish
