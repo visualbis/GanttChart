@@ -172,6 +172,7 @@ async function initVisualCodeCommit(componentName = '', buildType = '') {
         }
         function copyCodeFolders() {
             logger(`Copying code folders ${component.name}`, "info");
+            logger(`PATH: ${componentRootPath}`, "info");
             FILES_TO_COPY.forEach(file => {
                 logger(`Copying file ${file}`, "info");
                 let srcPath = path.join(componentRootPath, file);
