@@ -141,7 +141,10 @@ async function initVisualCodeCommit(componentName = '', buildType = '') {
         }
         function removeFoldersAndFiles() {
             logger(`Removing folders and files ${component.name}`, "info");
+            logger(` PATH: ${BUILD_REPO_PATH}`,'info')
             fs.readdirSync(BUILD_REPO_PATH).forEach(file => {
+                
+            logger(` FILENAME: ${file}`,'info')
                 if (file === '.git') {
                     return;
                 }
