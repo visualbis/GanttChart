@@ -315,7 +315,7 @@ async function initPackagesCommit() {
     for (let i = 0; i < packages.length; i++) {
         const packageUsed = packages[i];
         const BUILD_REPO_PATH = path.join(PACKAGE_ROOT, `./${packageUsed}`);
-        const componentRootPath = path.join(ROOT_PATH, `./${packageUsed}`);
+        const componentRootPath = ROOT_PATH;
         function copyCodeFolders() {
             logger(`Copying code folders ${packageUsed}`, "info");
             FILES_TO_COPY.forEach(file => {
