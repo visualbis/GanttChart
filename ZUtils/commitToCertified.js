@@ -227,9 +227,9 @@ async function initVisualCodeCommit(componentName = '', buildType = '') {
             logger(`Init git failed ${component.name}`, "error");
             return;
         }
-        // removeFoldersAndFiles();
-        // copyConfigFiles();
-        // copyCodeFolders();
+        removeFoldersAndFiles();
+        copyConfigFiles();
+        copyCodeFolders();
         await commitFiles();
     }
 }
@@ -293,7 +293,7 @@ async function initPackagesCommit() {
     function removeFoldersAndFiles() {
         logger(`Removing folders and files`, "info");
         fs.readdirSync(PACKAGE_ROOT).forEach(file => {
-            if (file === '.git') {
+            if (file === '.github') {
                 return;
             }
             fs.removeSync(path.join(PACKAGE_ROOT, file));
