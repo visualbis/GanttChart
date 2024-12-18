@@ -227,9 +227,9 @@ async function initVisualCodeCommit(componentName = '', buildType = '') {
             logger(`Init git failed ${component.name}`, "error");
             return;
         }
-        removeFoldersAndFiles();
-        copyConfigFiles();
-        copyCodeFolders();
+        // removeFoldersAndFiles();
+        // copyConfigFiles();
+        // copyCodeFolders();
         await commitFiles();
     }
 }
