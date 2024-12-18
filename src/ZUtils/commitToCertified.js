@@ -86,12 +86,9 @@ async function initVisualCodeCommit(componentName = '', buildType = '') {
         }
     }
     for (let i = 0; i < componentList.length; i++) {
-        const component = componentList[i
-        ];
-        const BUILD_REPO_PATH = path.join(BUILD_REPOS_ROOT, `./${component.name
-            }`);
-        const componentRootPath = path.join(ROOT_PATH, `./${component.name
-            }`);
+        const component = componentList[i];
+        const BUILD_REPO_PATH = path.join(BUILD_REPOS_ROOT, `./${component.name}`);
+        const componentRootPath = ROOT_PATH;
         let git = null;
         async function iniGit() {
             fs.mkdirSync(BUILD_REPO_PATH);
@@ -315,7 +312,7 @@ async function initPackagesCommit() {
     for (let i = 0; i < packages.length; i++) {
         const packageUsed = packages[i];
         const BUILD_REPO_PATH = path.join(PACKAGE_ROOT, `./${packageUsed}`);
-        const componentRootPath = ROOT_PATH;
+        const componentRootPath = path.join(ROOT_PATH, `./${packageUsed}`);
         function copyCodeFolders() {
             logger(`Copying code folders ${packageUsed}`, "info");
             FILES_TO_COPY.forEach(file => {
