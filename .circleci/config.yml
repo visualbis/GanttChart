@@ -172,7 +172,7 @@ jobs:
                       git log --format=oneline -n 1 $CIRCLE_SHA1 | tee commitmsg 
                       GIT_COMMIT_DESC=$(awk '{print $3}' commitmsg)
                       export COMMIT_MSG=$(cat commitmsg)
-                      node src/ZUtils/commitToCertified.js
+                      node ZUtils/commitToCertified.js
                       # if ! [[ $GIT_COMMIT_DESC =~ ^(npmupdate)$ ]];
                       # then
                       #   echo $GIT_COMMIT_DESC
