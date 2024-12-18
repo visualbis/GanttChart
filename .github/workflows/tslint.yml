@@ -1,0 +1,68 @@
+name: Node CI
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+    - name: Validate for forks
+      run: |
+        if [ $(echo $GITHUB_REPOSITORY == 'devpowerpro/PowerBI') ];
+        then
+          exit 1
+        fi  
+    - uses: actions/checkout@v3
+    - name: Certification Checklist
+      run: |
+        FILE=(package.json package-lock.json pbiviz.json tsconfig.json tslint.json capabilities.json)
+        for i in "${FILE[@]}"
+        do
+            if [ -f "$i" ];
+            then
+               echo "$i exists."
+            else
+               echo "$i does not exists." 
+               exit 1
+            fi
+        done 
+        rm package-lock.json
+        COMMAND=(eval setTimeout requestAnimationFrame setInterval innerHTML D3.html)
+        for keyval in "${COMMAND[@]}"
+        do
+            if $(grep -Rw -m 1 "src/" -e $keyval); then
+                echo "$keyval found"
+                exit 1
+            else
+                echo "$keyval not found"
+            fi
+        done
+        if [ -d "node_modules" ];
+        then
+           echo "node_modules exists."
+           exit 1
+        else
+           echo "node_modules does not exists." 
+        fi
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm install, build, and packages
+      run: | 
+        mkdir build  
+        npm install
+        sudo cp ./PowerBICustomVisualTest_public.pfx ./node_modules/powerbi-visuals-tools/certs/PowerBICustomVisualTest_public.pfx 
+        npm run lint
+        npm run eslint
+        npm audit --audit-level=moderate --production
+        npm run dist
+        cp -r dist ./build 
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: dist
+        path: ./build    
+      env:
+        CI: true
