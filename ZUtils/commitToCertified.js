@@ -214,10 +214,12 @@ async function initVisualCodeCommit(componentName = '', buildType = '') {
             logger(`Copying config files ${component.name}`, "info");
             CONFIG_FOLDERS.forEach(folder => {
                 const srcPath = path.join(ROOT_PATH, folder);
+                logger(`SRC-PATH: ${srcPath}`,'info');
                 if (!fs.existsSync(srcPath)) {
                     return;
                 }
                 const destPath = path.join(BUILD_REPO_PATH, folder);
+                logger(`DESC-PATH: ${destPath}`,'info');
                 if (!fs.emptyDirSync(destPath)) {
                     fs.mkdirSync(destPath);
                 }
