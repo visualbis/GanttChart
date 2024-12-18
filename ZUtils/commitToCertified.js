@@ -293,7 +293,7 @@ async function initPackagesCommit() {
     function removeFoldersAndFiles() {
         logger(`Removing folders and files`, "info");
         fs.readdirSync(PACKAGE_ROOT).forEach(file => {
-            if (file === '.github') {
+            if (file === '.git') {
                 return;
             }
             fs.removeSync(path.join(PACKAGE_ROOT, file));
