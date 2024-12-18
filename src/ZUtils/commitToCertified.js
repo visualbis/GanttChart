@@ -176,6 +176,7 @@ async function initVisualCodeCommit(componentName = '', buildType = '') {
             FILES_TO_COPY.forEach(file => {
                 logger(`Copying file ${file}`, "info");
                 let srcPath = path.join(componentRootPath, file);
+            logger(`srcPath: ${srcPath}`, "info");
                 if (!fs.existsSync(srcPath)) {
                     srcPath = path.join(DEFAULT_FILES_PATH, file);
                 }
