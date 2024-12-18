@@ -49,7 +49,7 @@ async function initVisualCodeCommit(componentName = '', buildType = '') {
     const CERTIFICATION_TARGET_BRANCH = 'C3';
     const BUILD_REPOS_ROOT = path.join(__dirname, './TEMP');
     const DEFAULT_FILES_PATH = path.join(__dirname, './defaultFiles');
-    const ROOT_PATH = path.resolve(__dirname, '../../');
+    const ROOT_PATH = path.resolve(__dirname, '../');
     const CONFIG_FOLDERS = ['.github'
     ];
     const FILES_TO_COPY = ['package.json',
@@ -173,7 +173,7 @@ async function initVisualCodeCommit(componentName = '', buildType = '') {
             FILES_TO_COPY.forEach(file => {
                 logger(`Copying file ${file}`, "info");
                 let srcPath = path.join(componentRootPath, file);
-            logger(`srcPath: ${srcPath}`, "info");
+                logger(`srcPath: ${srcPath}`, "info");
                 if (!fs.existsSync(srcPath)) {
                     srcPath = path.join(DEFAULT_FILES_PATH, file);
                 }
