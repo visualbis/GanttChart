@@ -240,104 +240,59 @@ export class GanttChart extends BifrostVisual.BifrostVisual {
         visualCurrentDate: Date
     ): void {
         logger('************ Appsource License Information ************', 'info');
-        // Logger.info('************ Appsource License Information ************', true);
 
         logger('User License Plans:', 'info');
-        // Logger.info('User License Plans:', true);
 
         logger(licenseInfo.plans.length ? JSON.stringify(licenseInfo.plans, null, 2) : 'Empty', 'info');
-        // Logger.info(
-        //     licenseInfo.plans.length ? JSON.stringify(licenseInfo.plans, null, 2) : 'Empty',
-        //     true
-        // );
 
         logger('Applied License Plan:', 'info');
-        // Logger.info('Applied License Plan:', true);
 
         logger(JSON.stringify(licenseInfo.currentPlan, null, 2), 'info');
-        // Logger.info(JSON.stringify(licenseInfo.currentPlan, null, 2), true);
 
         logger('Stored License Plan:', 'info');
-        // Logger.info('Stored License Plan:', true);
 
         logger(JSON.stringify(licenseInfo.storedPlan, null, 2), 'info');
-        // Logger.info(JSON.stringify(licenseInfo.storedPlan, null, 2), true);
 
         logger('Tenant License Plan:', 'info');
-        // Logger.info('Tenant License Plan:', true);
 
         logger(JSON.stringify(licenseInfo.tenantPlan, null, 2), 'info');
-        // Logger.info(JSON.stringify(licenseInfo.tenantPlan, null, 2), true);
 
         logger('Model Creation Date:', 'info');
-        // Logger.info('Model Creation Date:', true);
-
 
         logger(licenseInfo.modelCreationDate, 'info');
-        // Logger.info(licenseInfo.modelCreationDate, true);
 
         logger('Model Expiry Date:', 'info');
-        // Logger.info('Model Expiry Date:', true);
 
         logger(licenseInfo.modelExpiryDate, 'info');
-        // Logger.info(licenseInfo.modelExpiryDate, true);
 
         logger('Current Date:', 'info');
-        // Logger.info('Current Date:', true);
-
 
         logger(visualCurrentDate.toString(), 'info');
-        // Logger.info(visualCurrentDate.toString(), true);
 
         logger('Offline License Expiry Date:', 'info');
-        // Logger.info('Offline License Expiry Date:', true);
 
         logger(licenseInfo.offlineLicenseExpiryDate, 'info');
-        // Logger.info(licenseInfo.offlineLicenseExpiryDate, true);
 
         logger('License Validation Status:', 'info');
-        // Logger.info('License Validation Status:', true);
-
 
         logger(licenseStates
             .map((licenseState) => EnumerationKeys.getLicenseStateKey(licenseState))
             .join(', '), 'info');
-        // Logger.info(
-        //     licenseStates
-        //         .map((licenseState) => EnumerationKeys.getLicenseStateKey(licenseState))
-        //         .join(', '),
-        //     true
-        // );
 
         logger('Host Environment:', 'info');
-        // Logger.info('Host Environment:', true);
 
         logger(
             EnumerationKeys.getCustomVisualHostEnvKey(licensor.getVisualHost().hostEnv), 'info');
-        // Logger.info(
-        //     EnumerationKeys.getCustomVisualHostEnvKey(licensor.getVisualHost().hostEnv),
-        //     true
-        // );
 
         logger('License Manager:', 'info');
-        // Logger.info('License Manager:', true);
-
 
         logger(Utils.isEmpty(licensor.getLicenseManagerApplied())
             ? 'Empty'
             : licensor.getLicenseManagerApplied(), 'info');
-        // Logger.info(
-        //     Utils.isEmpty(licensor.getLicenseManagerApplied())
-        //         ? 'Empty'
-        //         : licensor.getLicenseManagerApplied(),
-        //     true
-        // );
 
         logger('Is Under Free Plan? ' + JSON.stringify(licenseInfo.isFreeLicensePlan), 'info');
-        // Logger.info('Is Under Free Plan? ' + JSON.stringify(licenseInfo.isFreeLicensePlan), true);
 
         logger('Is Sample Report? ' + JSON.stringify(licenseInfo.isSampleReport), 'info');
-        // Logger.info('Is Sample Report? ' + JSON.stringify(licenseInfo.isSampleReport), true);
     }
 
     initPrintLayout = () => {
